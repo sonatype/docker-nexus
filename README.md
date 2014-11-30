@@ -1,6 +1,6 @@
 # sonatype/docker-nexus
 
-CentOS 6 Dockerfile for Sonatype Nexus OSS.
+CentOS 6 Docker image for Sonatype Nexus (OSS).
 
 To build:
 
@@ -22,7 +22,7 @@ or to assign a random port that maps to port 8081 on the container:
 # docker run -d -p 8081 --name nexus <username>/nexus
 ```
 
-To the port that the container is listening on:
+To determine the port that the container is listening on:
 
 ```
 # docker ps nexus
@@ -36,14 +36,10 @@ $ curl http://localhost:8081/service/local/status
 
 ## Notes
 
-
-* Installation of Nexus Professional is `/opt/sonatype/nexus`.  Notably:
-
+* Installation of Nexus Professional is to `/opt/sonatype/nexus`.  Notably:
   * `/opt/sonatype/nexus-pro/conf/nexus.properties` is the properties file
-
-  * `/opt/sonatype/nexus/bin/start.sh` is the start script.
-  It uses JVM global parameters to set `nexus-work` and
-  `nexus-webapp-context-path`.
+  * `/opt/sonatype/nexus/bin/start.sh` is the start script.  It uses JVM
+  global parameters to set `nexus-work` and `nexus-webapp-context-path`.
 
 * A persistent directory, `/sonatype-work`, is used for configuration,
 logs, and storage. This directory needs to be writable by the Nexus
