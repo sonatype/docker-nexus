@@ -7,7 +7,7 @@ To build:
 Copy the sources down and do the build-
 
 ```
-# docker build --rm=true --tag=sonatype/nexus:2.10.0
+# docker build --rm=true --tag=<username>/nexus
 ```
 
 To run (if port 8081 is open on your host):
