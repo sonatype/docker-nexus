@@ -36,7 +36,7 @@ $ curl http://localhost:8081/service/local/status
 
 ## Notes
 
-* Installation of Nexus Professional is to `/opt/sonatype/nexus`.  Notably:
+* Installation of Nexus is to `/opt/sonatype/nexus`.  Notably:
   `/opt/sonatype/nexus-pro/conf/nexus.properties` is the properties file,
   which sets the context path to "/".
 
