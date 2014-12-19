@@ -1,6 +1,6 @@
 # sonatype/docker-nexus
 
-A busybox-based Docker image for Sonatype Nexus OSS with the Oracle JDK.
+A Docker image for Sonatype Nexus OSS with the Oracle JDK.
 
 To build:
 
@@ -37,8 +37,9 @@ $ curl http://localhost:8081/service/local/status
 ## Notes
 
 * Installation of Nexus is to `/opt/sonatype/nexus`.  Notably:
-  `/opt/sonatype/nexus-pro/conf/nexus.properties` is the properties file,
-  which sets the context path to "/".
+  `/opt/sonatype/nexus-pro/conf/nexus.properties` is the properties file.
+  Parameters (`nexus-work` and `nexus-webapp-context-path`) definied
+  here are overridden in the JVM invocation.
 
 * A persistent directory, `/sonatype-work`, is used for configuration,
 logs, and storage. This directory needs to be writable by the Nexus
@@ -52,8 +53,8 @@ for additional information.
   until no containers use them, a container can created specifically for 
   this purpose.  This is the recommended approach.  
   ```
-    $ docker run -d --name nexus-data sonatype/nexus echo "data-only container for Nexus"  # create the data volume
-    $ docker run -d -p 8081:8081 --name nexus --volumes-from nexus-data sonatype/nexus  # run nexus
+    $ docker run -d --name nexus-data sonatype/nexus echo "data-only container for Nexus"
+    $ docker run -d -p 8081:8081 --name nexus --volumes-from nexus-data sonatype/nexus
   ```
 
   2. *Mount a host directory as the volume*.  This is not portable, as it
@@ -61,8 +62,8 @@ for additional information.
   However it can be useful in certain situations where this volume needs
   to be assigned to certain underlying storage.  
   ```
-    # mkdir /some/dir/nexus-data && chown -R 200 /some/dir/nexus-data  # create the host directory
-    # docker run -d -p 8081:8081 --name nexus -v /some/dir/nexus-data:/sonatype-work  # run nexus
+    # mkdir /some/dir/nexus-data && chown -R 200 /some/dir/nexus-data
+    # docker run -d -p 8081:8081 --name nexus -v /some/dir/nexus-data:/sonatype-work sonatype/nexus
   ```
 
 
