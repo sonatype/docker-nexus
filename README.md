@@ -37,7 +37,7 @@ $ curl http://localhost:8081/service/local/status
 ## Notes
 
 * Installation of Nexus is to `/opt/sonatype/nexus`.  Notably:
-  `/opt/sonatype/nexus-pro/conf/nexus.properties` is the properties file.
+  `/opt/sonatype/nexus/conf/nexus.properties` is the properties file.
   Parameters (`nexus-work` and `nexus-webapp-context-path`) definied
   here are overridden in the JVM invocation.
 
