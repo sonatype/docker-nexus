@@ -28,10 +28,10 @@ $ curl http://localhost:8081/service/local/status
 
 To build:
 
-Copy the sources down and do the build-
+Copy the Dockerfile and do the build-
 
 ```
-# docker build --rm=true --tag=<username>/nexus .
+$ docker build --rm=true --tag=sonatype/nexus .
 ```
 
 
