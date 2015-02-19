@@ -5,13 +5,13 @@ A Docker image for Sonatype Nexus OSS with the Oracle JDK.
 To run (if port 8081 is open on your host):
 
 ```
-# docker run -d -p 8081:8081 --name nexus <username>/nexus
+# docker run -d -p 8081:8081 --name nexus sonatype/nexus
 ```
 
 or to assign a random port that maps to port 8081 on the container:
 
 ```
-# docker run -d -p 8081 --name nexus <username>/nexus
+# docker run -d -p 8081 --name nexus sonatype/nexus
 ```
 
 To determine the port that the container is listening on:
