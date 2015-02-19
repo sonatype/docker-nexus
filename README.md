@@ -66,9 +66,15 @@ for additional information.
     # docker run -d -p 8081:8081 --name nexus -v /some/dir/nexus-data:/sonatype-work sonatype/nexus
   ```
 
+* Three environment variables can be used to control the JVM.
 
-## Oracle License
+  * `MAX_HEAP`, passed as -Xmx.  Defaults to `1g`.
+  * `MIN_HEAP`, passed as -Xms.  Defaults to `256m`.
+  * `JAVA_OPTS`.  Additional options can be passed to the JVM via this variable.
+  Default: `-server -XX:MaxPermSize=192m -Djava.net.preferIPv4Stack=true`.
 
-By using this container, you accept the Oracle Binary
-Code License Agreement for Java SE available here:
-http://www.oracle.com/technetwork/java/javase/terms/license/index.html
+  These can be used supplied at runtime to control the JVM:
+  ```
+    $ docker run -d -p 8081:8081 --name nexus -e MAX_HEAP=768m sonatype/nexus
+  ```
+
