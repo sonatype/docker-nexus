@@ -65,7 +65,7 @@ process, which runs as UID 200.
   These can be used supplied at runtime to control the JVM:
 
   ```
-    $ docker run -d -p 8081:8081 --name nexus -e MAX_HEAP=768m sonatype/nexus
+  $ docker run -d -p 8081:8081 --name nexus -e MAX_HEAP=768m sonatype/nexus
   ```
 
 
@@ -81,8 +81,8 @@ additional information.
   this purpose.  This is the recommended approach.  
 
   ```
-    $ docker run -d --name nexus-data sonatype/nexus echo "data-only container for Nexus"
-    $ docker run -d -p 8081:8081 --name nexus --volumes-from nexus-data sonatype/nexus
+  $ docker run -d --name nexus-data sonatype/nexus echo "data-only container for Nexus"
+  $ docker run -d -p 8081:8081 --name nexus --volumes-from nexus-data sonatype/nexus
   ```
 
   2. *Mount a host directory as the volume*.  This is not portable, as it
@@ -91,7 +91,7 @@ additional information.
   to be assigned to certain underlying storage.  
 
   ```
-    $ mkdir /some/dir/nexus-data && chown -R 200 /some/dir/nexus-data
-    $ docker run -d -p 8081:8081 --name nexus -v /some/dir/nexus-data:/sonatype-work sonatype/nexus
+  $ mkdir /some/dir/nexus-data && chown -R 200 /some/dir/nexus-data
+  $ docker run -d -p 8081:8081 --name nexus -v /some/dir/nexus-data:/sonatype-work sonatype/nexus
   ```
 
