@@ -2,7 +2,7 @@ FROM       dockerfile/java:oracle-java7
 MAINTAINER Sonatype <cloud-ops@sonatype.com>
 
 # The version of nexus to install
-ENV NEXUS_VERSION 2.11.2-03
+ENV NEXUS_VERSION 2.11.2-06
 
 RUN mkdir -p /opt/sonatype/nexus \
   && curl --fail --silent --location --retry 3 \
