@@ -55,8 +55,10 @@ $ docker logs -f nexus
 logs, and storage. This directory needs to be writable by the Nexus
 process, which runs as UID 200.
 
-* Three environment variables can be used to control the JVM.
+* Four environment variables can be used to control the JVM arguments
 
+  * `CONTEXT_PATH`, passed as -Dnexus-webapp-context-path.  This is used to define the
+  URL which Nexus is accessed.
   * `MAX_HEAP`, passed as -Xmx.  Defaults to `1g`.
   * `MIN_HEAP`, passed as -Xms.  Defaults to `256m`.
   * `JAVA_OPTS`.  Additional options can be passed to the JVM via this variable.
