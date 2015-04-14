@@ -26,6 +26,6 @@ ENV JAVA_OPTS -server -XX:MaxPermSize=192m -Djava.net.preferIPv4Stack=true
 CMD java \
   -Dnexus-work=/sonatype-work -Dnexus-webapp-context-path=${CONTEXT_PATH} \
   -Xms${MIN_HEAP} -Xmx${MAX_HEAP} \
+  -cp 'conf/:lib/*' \
   ${JAVA_OPTS} \
-  -cp conf/:`(echo lib/*.jar) | sed -e "s/ /:/g"` \
   org.sonatype.nexus.bootstrap.Launcher ./conf/jetty.xml ./conf/jetty-requestlog.xml
