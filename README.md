@@ -4,7 +4,7 @@ Docker images for Sonatype Nexus with the Oracle JDK.
 
 To build:
 ```
-# docker build --rm --tag sonatype/nexus:oss oss/
+# docker build --rm --tag sonatype/nexus oss/
 # docker build --rm --tag sonatype/nexus-pro pro/
 ```
 
