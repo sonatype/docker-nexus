@@ -2,10 +2,16 @@
 
 Docker images for Sonatype Nexus with the Oracle JDK.
 
+To build:
+```
+# docker build --rm --tag sonatype/nexus:oss oss/
+# docker build --rm --tag sonatype/nexus-pro pro/
+```
+
 To run (if port 8081 is open on your host):
 
 ```
-# docker run -d -p 8081:8081 --name nexus sonatype/nexus
+# docker run -d -p 8081:8081 --name nexus sonatype/nexus:oss
 ```
 
 or to assign a random port that maps to port 8081 on the container:
