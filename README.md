@@ -1,6 +1,6 @@
 # sonatype/docker-nexus
 
-A Docker image for Sonatype Nexus OSS with the Oracle JDK.
+Docker images for Sonatype Nexus with the Oracle JDK.
 
 To run (if port 8081 is open on your host):
 
