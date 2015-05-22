@@ -65,7 +65,7 @@ process, which runs as UID 200.
 
   * `CONTEXT_PATH`, passed as -Dnexus-webapp-context-path.  This is used to define the
   URL which Nexus is accessed.
-  * `MAX_HEAP`, passed as -Xmx.  Defaults to `1g`.
+  * `MAX_HEAP`, passed as -Xmx.  Defaults to `768m`.
   * `MIN_HEAP`, passed as -Xms.  Defaults to `256m`.
   * `JAVA_OPTS`.  Additional options can be passed to the JVM via this variable.
   Default: `-server -XX:MaxPermSize=192m -Djava.net.preferIPv4Stack=true`.
