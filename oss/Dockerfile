@@ -1,4 +1,4 @@
-FROM       dockerfile/java:oracle-java7
+FROM       java:7
 MAINTAINER Sonatype <cloud-ops@sonatype.com>
 
 ENV SONATYPE_WORK /sonatype-work
@@ -29,4 +29,3 @@ CMD java \
   -cp 'conf/:lib/*' \
   ${JAVA_OPTS} \
   org.sonatype.nexus.bootstrap.Launcher ./conf/jetty.xml ./conf/jetty-requestlog.xml
-
