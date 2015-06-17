@@ -105,3 +105,10 @@ additional information.
   $ docker run -d -p 8081:8081 --name nexus -v /some/dir/nexus-data:/sonatype-work sonatype/nexus
   ```
 
+
+### Adding Nexus Plugins
+
+Creating a docker image based on `sonatype/nexus` is the suggested
+process: plugins should be expanded to `/opt/sonatype/nexus/nexus/WEB-INF/plugin-repository`.
+See https://github.com/sonatype/docker-nexus/issues/9 for an example
+concerning the Nexus P2 plugins.
