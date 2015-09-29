@@ -2,7 +2,7 @@ FROM       centos:centos7
 MAINTAINER Sonatype <cloud-ops@sonatype.com>
 
 ENV SONATYPE_WORK /sonatype-work
-ENV NEXUS_VERSION 2.11.4-01
+ENV NEXUS_VERSION 3.0.0-m5
 
 RUN yum install -y \
   curl tar createrepo \
@@ -15,13 +15,12 @@ RUN cd /var/tmp \
   && rpm -Ui jdk-7u76-linux-x64.rpm \
   && rm -rf jdk-7u76-linux-x64.rpm
 
-RUN mkdir -p /opt/sonatype/nexus \
-  && curl --fail --silent --location --retry 3 \
-    https://download.sonatype.com/nexus/oss/nexus-${NEXUS_VERSION}-bundle.tar.gz \
-  | gunzip \
-  | tar x -C /tmp nexus-${NEXUS_VERSION} \
-  && mv /tmp/nexus-${NEXUS_VERSION}/* /opt/sonatype/nexus/ \
-  && rm -rf /tmp/nexus-${NEXUS_VERSION}
+RUN mkdir -p /opt/sonatype/nexus && cd /tmp \
+  && curl -o nexus.tar.gz --fail --location --retry 3 \
+      https://download.sonatype.com/nexus/oss/nexus-${NEXUS_VERSION}-bundle.tar.gz \
+  && tar -xf nexus.tar.gz \
+  && mv nexus-* /opt/sonatype/nexus/ \
+  && rm -rf /tmp/nexus-*
 
 RUN useradd -r -u 200 -m -c "nexus role account" -d ${SONATYPE_WORK} -s /bin/false nexus
 
@@ -41,4 +40,3 @@ CMD java \
   -cp 'conf/:lib/*' \
   ${JAVA_OPTS} \
   org.sonatype.nexus.bootstrap.Launcher ${LAUNCHER_CONF}
-
