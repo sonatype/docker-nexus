@@ -2,7 +2,7 @@ FROM       centos:centos7
 MAINTAINER Sonatype <cloud-ops@sonatype.com>
 
 ENV SONATYPE_WORK /sonatype-work
-ENV NEXUS_VERSION 3.0.0-b2015110601
+ENV NEXUS_VERSION 2.11.4-01
 
 RUN yum install -y \
   curl tar createrepo \
