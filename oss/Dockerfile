@@ -11,9 +11,9 @@ RUN yum install -y \
 RUN cd /var/tmp \
   && curl --fail --silent --location --retry 3 -O \
   --header "Cookie: oraclelicense=accept-securebackup-cookie; " \
-  http://download.oracle.com/otn-pub/java/jdk/7u76-b13/jdk-7u76-linux-x64.rpm \
-  && rpm -Ui jdk-7u76-linux-x64.rpm \
-  && rm -rf jdk-7u76-linux-x64.rpm
+  http://download.oracle.com/otn-pub/java/jdk/8u66-b17/jdk-8u66-linux-x64.rpm \
+  && rpm -Ui jdk-8u66-linux-x64.rpm \
+  && rm -rf jdk-8u66-linux-x64.rpm 
 
 RUN mkdir -p /opt/sonatype/nexus \
   && curl --fail --silent --location --retry 3 \
