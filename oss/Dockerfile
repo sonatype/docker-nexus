@@ -41,4 +41,3 @@ CMD java \
   -cp 'conf/:lib/*' \
   ${JAVA_OPTS} \
   org.sonatype.nexus.bootstrap.Launcher ${LAUNCHER_CONF}
-
