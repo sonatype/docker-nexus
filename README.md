@@ -87,7 +87,7 @@ Containers](https://docs.docker.com/userguide/dockervolumes/) for
 additional information.
 
   1. *Use a data volume container*.  Since data volumes are persistent
-  until no containers use them, a container can created specifically for 
+  until no containers use them, a container can be created specifically for 
   this purpose.  This is the recommended approach.  
 
   ```
