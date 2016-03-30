@@ -26,9 +26,7 @@ To test:
 $ curl http://localhost:8081/service/local/status
 ```
 
-To build:
-
-Copy the Dockerfile and do the build-
+To build, copy the Dockerfile and do the build:
 
 ```
 $ docker build --rm=true --tag=sonatype/nexus .
@@ -55,7 +53,7 @@ $ docker logs -f nexus
 logs, and storage. This directory needs to be writable by the Nexus
 process, which runs as UID 200.
 
-* Four environment variables can be used to control the JVM arguments
+* Environment variables can be used to control the JVM arguments
 
   * `CONTEXT_PATH`, passed as -Dnexus-webapp-context-path.  This is used to define the
   URL which Nexus is accessed.
@@ -66,7 +64,7 @@ process, which runs as UID 200.
   * `LAUNCHER_CONF`.  A list of configuration files supplied to the
   Nexus bootstrap launcher.  Default: `./conf/jetty.xml ./conf/jetty-requestlog.xml`
 
-  These can be used supplied at runtime to control the JVM:
+  These can be user supplied at runtime to control the JVM:
 
   ```
   $ docker run -d -p 8081:8081 --name nexus -e MAX_HEAP=768m sonatype/nexus
