@@ -37,7 +37,7 @@ VOLUME ${SONATYPE_WORK}
 EXPOSE 8081
 WORKDIR /opt/sonatype/nexus
 USER nexus
-ENV CONTEXT_PATH /
+ENV CONTEXT_PATH /nexus
 ENV MAX_HEAP 768m
 ENV MIN_HEAP 256m
 ENV JAVA_OPTS -server -Djava.net.preferIPv4Stack=true
