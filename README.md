@@ -18,13 +18,13 @@ To run (if port 8081 is open on your host):
 To determine the port that the container is listening on:
 
 ```
-# docker ps nexus
+# docker ps -l
 ```
 
 To test:
 
 ```
-$ curl http://localhost:8081/service/local/status
+$ curl http://localhost:8081/nexus/service/local/status
 ```
 
 To build, copy the Dockerfile and do the build:
@@ -47,17 +47,17 @@ $ docker logs -f nexus
 
 * Installation of Nexus is to `/opt/sonatype/nexus`.  Notably:
   `/opt/sonatype/nexus/conf/nexus.properties` is the properties file.
-  Parameters (`nexus-work` and `nexus-webapp-context-path`) definied
+  Parameters (`nexus-work` and `nexus-webapp-context-path`) defined
   here are overridden in the JVM invocation.
 
 * A persistent directory, `/sonatype-work`, is used for configuration,
-logs, and storage. This directory needs to be writable by the Nexus
+logs, and storage. This directory needs to be writeable by the Nexus
 process, which runs as UID 200.
 
 * Environment variables can be used to control the JVM arguments
 
   * `CONTEXT_PATH`, passed as -Dnexus-webapp-context-path.  This is used to define the
-  URL which Nexus is accessed.
+  URL which Nexus is accessed.  Defaults to '/nexus'
   * `MAX_HEAP`, passed as -Xmx.  Defaults to `768m`.
   * `MIN_HEAP`, passed as -Xms.  Defaults to `256m`.
   * `JAVA_OPTS`.  Additional options can be passed to the JVM via this variable.
