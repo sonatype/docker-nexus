@@ -32,6 +32,15 @@ RUN mkdir -p /opt/sonatype/nexus \
 
 RUN useradd -r -u 200 -m -c "nexus role account" -d ${SONATYPE_WORK} -s /bin/false nexus
 
+COPY scripts/readinessProbe.sh /usr/local/bin/readinessProbe.sh
+COPY scripts/fixPermissions.sh /usr/local/bin/fixPermissions.sh
+
+RUN chmod 755 /usr/local/bin/fixPermissions.sh
+RUN chmod 755 /usr/local/bin/readinessProbe.sh
+
+RUN  /usr/local/bin/fixPermissions.sh /opt/nexus
+RUN  /usr/local/bin/fixPermissions.sh $SONATYPE_WORK
+
 VOLUME ${SONATYPE_WORK}
 
 EXPOSE 8081
