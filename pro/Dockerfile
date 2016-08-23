@@ -1,4 +1,4 @@
-FROM       centos:centos7
+FROM       registry.access.redhat.com/rhel7/rhel:7.2
 MAINTAINER Sonatype <cloud-ops@sonatype.com>
 
 ENV SONATYPE_WORK /sonatype-work
@@ -9,8 +9,8 @@ ENV JAVA_VERSION_MAJOR 8
 ENV JAVA_VERSION_MINOR 74
 ENV JAVA_VERSION_BUILD 02
 
-RUN yum install -y \
-  curl tar createrepo \
+RUN yum -y --disablerepo=* --enablerepo=rhel-7-server-rpms \
+  install yum-utils tar createrepo \
   && yum clean all
 
 # install Oracle JRE
@@ -48,4 +48,3 @@ CMD ${JAVA_HOME}/bin/java \
   -cp 'conf/:lib/*' \
   ${JAVA_OPTS} \
   org.sonatype.nexus.bootstrap.Launcher ${LAUNCHER_CONF}
-
