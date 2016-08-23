@@ -1,7 +1,7 @@
 FROM       registry.access.redhat.com/rhel7/rhel:7.2
 MAINTAINER Sonatype <cloud-ops@sonatype.com>
 
-ENV NEXUS_HOME /opt/nexus/nexus
+ENV NEXUS_HOME /opt/sonatype/nexus
 ENV SONATYPE_WORK /sonatype-work
 ENV NEXUS_VERSION 2.13.0-01
 
@@ -39,7 +39,7 @@ COPY scripts/fixPermissions.sh /usr/local/bin/fixPermissions.sh
 RUN chmod 755 /usr/local/bin/fixPermissions.sh
 RUN chmod 755 /usr/local/bin/readinessProbe.sh
 
-RUN  /usr/local/bin/fixPermissions.sh /opt/nexus
+RUN  /usr/local/bin/fixPermissions.sh /opt/sonatype
 RUN  /usr/local/bin/fixPermissions.sh $SONATYPE_WORK
 
 VOLUME ${SONATYPE_WORK}
