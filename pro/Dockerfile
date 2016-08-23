@@ -1,6 +1,7 @@
 FROM       registry.access.redhat.com/rhel7/rhel:7.2
 MAINTAINER Sonatype <cloud-ops@sonatype.com>
 
+ENV NEXUS_HOME /opt/nexus/nexus
 ENV SONATYPE_WORK /sonatype-work
 ENV NEXUS_VERSION 2.13.0-01
 
@@ -44,7 +45,7 @@ RUN  /usr/local/bin/fixPermissions.sh $SONATYPE_WORK
 VOLUME ${SONATYPE_WORK}
 
 EXPOSE 8081
-WORKDIR /opt/sonatype/nexus
+WORKDIR $NEXUS_HOME
 USER nexus
 ENV CONTEXT_PATH /
 ENV MAX_HEAP 768m
