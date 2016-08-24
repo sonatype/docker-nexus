@@ -193,7 +193,7 @@
                "description": "Persistent Volume Size (512Mi, 5Gi,...)",
                "displayName": "Persistent Volume Size",
                "name": "SIZE",
-               "value": "5Gi"
+               "value": "2Gi"
             },
             {
                "description": "Nexus image name",
@@ -225,7 +225,7 @@
                         "storage": "${SIZE}"
                      }
                   },
-                  "volumeName": "nexus-pv"
+                  "volumeName": "pv03"
                }
             },
             {
