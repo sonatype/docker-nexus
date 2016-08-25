@@ -1,0 +1,10 @@
+{
+    "kind": "ImageStream",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "rhel7"
+    },
+	"spec": {
+		"dockerImageRepository": "registry.access.redhat.com/rhel7/rhel"
+	}
+}

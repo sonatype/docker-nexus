@@ -20,6 +20,6 @@ do
   [ -r $i ] && chmod go+r $i
   [ -w $i ] && chmod go+w $i
   [ -x $i ] && chmod go+x $i
-done
+done  
 
 exit 0
