@@ -2,14 +2,14 @@
    "kind": "List",
    "apiVersion": "v1",
    "metadata": {
-      "name": "nexus-pro"
+      "name": "nexus-oss"
    },
    "items": [
       {
          "kind": "BuildConfig",
          "apiVersion": "v1",
          "metadata": {
-            "name": "nexus-pro"
+            "name": "nexus-oss"
          },
          "spec": {
             "triggers": [
@@ -36,7 +36,7 @@
                   "uri": "https://github.com/sonatype/docker-nexus",
                   "ref": "ose"
                },
-               "contextDir": "pro"
+               "contextDir": "oss"
             },
             "strategy": {
                "type": "Docker",
@@ -50,7 +50,7 @@
             "output": {
                "to": {
                   "kind": "ImageStreamTag",
-                  "name": "nexus-pro:latest"
+                  "name": "nexus-oss:latest"
                }
             },
             "resources": {}
@@ -70,7 +70,7 @@
          "kind": "ImageStream",
          "apiVersion": "v1",
          "metadata": {
-            "name": "nexus-pro"
+            "name": "nexus-oss"
          },
          "spec": {
             "dockerImageRepository": "",
@@ -85,22 +85,22 @@
          "kind": "Template",
          "apiVersion": "v1",
          "metadata": {
-            "name": "nexus-pro",
+            "name": "nexus-oss",
             "annotations": {
-               "description": "Nexus Repository Manager Pro",
-               "tags": "repository-managers,nexus-pro"
+               "description": "Nexus Repository Manager OSS",
+               "tags": "repository-managers,nexus-oss"
             }
          },
          "labels": {
-            "application": "nexus-pro",
-            "createdBy": "template-nexus-pro"
+            "application": "nexus-oss",
+            "createdBy": "template-nexus-oss"
          },
          "parameters": [
             {
                "description": "The name for the application. The service will be named like the application.",
                "displayName": "Application name.",
                "name": "APPLICATION_NAME",
-               "value": "nexus-pro"
+               "value": "nexus-oss"
             },
             {
                "description": "Custom hostname for service routes.  Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix>",
@@ -160,11 +160,11 @@
                         "imageChangeParams": {
                            "automatic": true,
                            "containerNames": [
-                              "nexus-pro"
+                              "${APPLICATION_NAME}"
                            ],
                            "from": {
                               "kind": "ImageStreamTag",
-                              "name": "nexus-pro:latest"
+                              "name": "${APPLICATION_NAME}:latest"
                            }
                         }
                      }
@@ -191,7 +191,7 @@
                         "containers": [
                            {
                               "name": "${APPLICATION_NAME}",
-                              "image": "nexus-pro",
+                              "image": "${APPLICATION_NAME}",
                               "ports": [
                                  {
                                     "name": "web",
