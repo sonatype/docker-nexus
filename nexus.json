@@ -2,23 +2,14 @@
    "kind": "List",
    "apiVersion": "v1",
    "metadata": {
-      "name": "nexus"
+      "name": "nexus-pro"
    },
    "items": [
-      {
-         "kind": "ServiceAccount",
-         "apiVersion": "v1",
-         "metadata": {
-            "name": "nexus",
-            "namespace": "nexus"
-         }
-      },
       {
          "kind": "BuildConfig",
          "apiVersion": "v1",
          "metadata": {
-            "name": "nexus-pro",
-            "namespace": "nexus"
+            "name": "nexus-pro"
          },
          "spec": {
             "triggers": [
@@ -52,68 +43,14 @@
                "dockerStrategy": {
                   "from": {
                      "kind": "DockerImage",
-                     "name": "registry.access.redhat.com/rhel7/rhel:7.2"
+                     "name": "registry.access.redhat.com/rhel7/rhel"
                   }
                }
             },
             "output": {
                "to": {
                   "kind": "ImageStreamTag",
-                  "name": "nexus-pro:latest",
-                  "namespace": "nexus"
-               }
-            },
-            "resources": {}
-         }
-      },
-      {
-         "kind": "BuildConfig",
-         "apiVersion": "v1",
-         "metadata": {
-            "name": "nexus-oss",
-            "namespace": "nexus"
-         },
-         "spec": {
-            "triggers": [
-               {
-                  "type": "GitHub",
-                  "github": {
-                     "secret": "secret"
-                  }
-               },
-               {
-                  "type": "Generic",
-                  "generic": {
-                     "secret": "secret"
-                  }
-               },
-               {
-                  "type": "ImageChange",
-                  "imageChange": {}
-               }
-            ],
-            "source": {
-               "type": "Git",
-               "git": {
-                  "uri": "https://github.com/sonatype/docker-nexus",
-                  "ref": "ose"
-               },
-               "contextDir": "oss"
-            },
-            "strategy": {
-               "type": "Docker",
-               "dockerStrategy": {
-                  "from": {
-                     "kind": "DockerImage",
-                     "name": "registry.access.redhat.com/rhel7/rhel:7.2"
-                  }
-               }
-            },
-            "output": {
-               "to": {
-                  "kind": "ImageStreamTag",
-                  "name": "nexus-oss:latest",
-                  "namespace": "nexus"
+                  "name": "nexus-pro:latest"
                }
             },
             "resources": {}
@@ -123,35 +60,17 @@
          "kind": "ImageStream",
          "apiVersion": "v1",
          "metadata": {
-            "name": "rhel7",
-            "namespace": "nexus"
+            "name": "rhel7"
          },
          "spec": {
-            "dockerImageRepository": "registry.access.redhat.com/rhel7/rhel:7.2"
+            "dockerImageRepository": "registry.access.redhat.com/rhel7/rhel"
          }
       },
       {
          "kind": "ImageStream",
          "apiVersion": "v1",
          "metadata": {
-            "name": "nexus-pro",
-            "namespace": "nexus"
-         },
-         "spec": {
-            "dockerImageRepository": "",
-            "tags": [
-               {
-                  "name": "latest"
-               }
-            ]
-         }
-      },
-      {
-         "kind": "ImageStream",
-         "apiVersion": "v1",
-         "metadata": {
-            "name": "nexus-oss",
-            "namespace": "nexus"
+            "name": "nexus-pro"
          },
          "spec": {
             "dockerImageRepository": "",
@@ -167,22 +86,21 @@
          "apiVersion": "v1",
          "metadata": {
             "name": "nexus-pro",
-            "namespace": "nexus",
             "annotations": {
                "description": "Nexus Repository Manager Pro",
-               "tags": "repository-managers,nexus"
+               "tags": "repository-managers,nexus-pro"
             }
          },
          "labels": {
             "application": "nexus-pro",
-            "createdBy": "template-nexus"
+            "createdBy": "template-nexus-pro"
          },
          "parameters": [
             {
                "description": "The name for the application. The service will be named like the application.",
                "displayName": "Application name.",
                "name": "APPLICATION_NAME",
-               "value": "nexus"
+               "value": "nexus-pro"
             },
             {
                "description": "Custom hostname for service routes.  Leave blank for default hostname, e.g.: <application-name>.<project>.<default-domain-suffix>",
@@ -193,19 +111,8 @@
                "description": "Persistent Volume Size (512Mi, 5Gi,...)",
                "displayName": "Persistent Volume Size",
                "name": "SIZE",
-               "value": "2Gi"
-            },
-            {
-               "description": "Nexus image name",
-               "displayName": "Nexus image name",
-               "name": "IMAGE_NAME",
-               "value": "nexus-pro"
-            },
-            {
-               "description": "Nexus image tag",
-               "displayName": "Nexus image tag",
-               "name": "IMAGE_TAG",
-               "value": "latest"
+               "value": "2Gi",
+               "required": true
             }
          ],
          "objects": [
@@ -213,8 +120,7 @@
                "kind": "PersistentVolumeClaim",
                "apiVersion": "v1",
                "metadata": {
-                  "name": "nexus-claim",
-                  "namespace": "nexus"
+                  "name": "nexus-pro"
                },
                "spec": {
                   "accessModes": [
@@ -224,8 +130,7 @@
                      "requests": {
                         "storage": "${SIZE}"
                      }
-                  },
-                  "volumeName": "pv03"
+                  }
                }
             },
             {
@@ -233,7 +138,10 @@
                "apiVersion": "v1",
                "metadata": {
                   "name": "nexus-pro",
-                  "namespace": "nexus"
+                  "creationTimestamp": null,
+                  "labels": {
+                      "application": "nexus-pro"
+                  }
                },
                "spec": {
                   "strategy": {
@@ -248,9 +156,6 @@
                   },
                   "triggers": [
                      {
-                        "type": "ConfigChange"
-                     },
-                     {
                         "type": "ImageChange",
                         "imageChangeParams": {
                            "automatic": true,
@@ -259,8 +164,7 @@
                            ],
                            "from": {
                               "kind": "ImageStreamTag",
-                              "name": "${IMAGE_NAME}:${IMAGE_TAG}",
-                              "namespace": "nexus"
+                              "name": "nexus-pro:latest"
                            }
                         }
                      }
@@ -272,15 +176,15 @@
                   "template": {
                      "metadata": {
                         "labels": {
-                           "deploymentconfig": "nexus-pro"
+                           "name": "nexus-pro"
                         }
                      },
                      "spec": {
                         "volumes": [
                            {
-                              "name": "pvol",
+                              "name": "nexus-pro-data",
                               "persistentVolumeClaim": {
-                                 "claimName": "nexus-claim"
+                                 "claimName": "nexus-pro"
                               }
                            }
                         ],
@@ -290,37 +194,20 @@
                               "image": "nexus-pro",
                               "ports": [
                                  {
+                                    "name": "web",
                                     "containerPort": 8081,
                                     "protocol": "TCP"
                                  }
                               ],
                               "volumeMounts": [
                                  {
-                                    "name": "pvol",
+                                    "name": "nexus-pro-data",
                                     "mountPath": "/sonatype-work"
                                  }
                               ],
-                              "livenessProbe": {
-                                 "httpGet": {
-                                    "port": 8081
-                                 },
-                                 "initialDelaySeconds": 180,
-                                 "timeoutSeconds": 1
-                              },
-                              "readinessProbe": {
-                                 "httpGet": {
-                                    "port": 8081
-                                 },
-                                 "initialDelaySeconds": 20,
-                                 "timeoutSeconds": 1
-                              },
-                              "resources": {
-                                 "requests": {
-                                    "memory": "2Gi"
-                                 }
-                              },
+                              "resources": {},
                               "terminationMessagePath": "/dev/termination-log",
-                              "imagePullPolicy": "IfNotPresent",
+                              "imagePullPolicy": "Always",
                               "securityContext": {
                                  "capabilities": {},
                                  "privileged": false
@@ -328,9 +215,7 @@
                            }
                         ],
                         "restartPolicy": "Always",
-                        "dnsPolicy": "ClusterFirst",
-                        "serviceAccountName": "nexus",
-                        "serviceAccount": "nexus"
+                        "dnsPolicy": "ClusterFirst"
                      }
                   }
                }
@@ -339,14 +224,14 @@
                "kind": "Route",
                "apiVersion": "v1",
                "metadata": {
-                  "name": "nexus-pro",
-                  "namespace": "nexus"
+                  "name": "${APPLICATION_NAME}",
+                  "creationTimestamp": null
                },
                "spec": {
                   "host": "${APPLICATION_HOSTNAME}",
                   "to": {
                      "kind": "Service",
-                     "name": "nexus-pro"
+                     "name": "${APPLICATION_NAME}"
                   }
                }
             },
@@ -355,19 +240,25 @@
                "apiVersion": "v1",
                "metadata": {
                   "name": "nexus-pro",
-                  "namespace": "nexus"
+                  "creationTimestamp": null,
+                  "labels": {
+                      "application": "nexus-pro"
+                  }
                },
                "spec": {
                   "ports": [
                      {
-                        "name": "http",
+                        "name": "web",
+                        "protocol": "TCP",
                         "port": 8081,
-                        "targetPort": 8081
+                        "targetPort": 8081,
+                        "nodePort": 0
                      }
                   ],
                   "selector": {
                      "deploymentconfig": "nexus-pro"
                   },
+                  "portalIP": "",
                   "type": "ClusterIP",
                   "sessionAffinity": "None"
                }
