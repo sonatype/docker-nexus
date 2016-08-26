@@ -28,32 +28,33 @@ echo
 # Grant Default CI Account Edit Access to All Projects and OpenShift Project
 oc policy add-role-to-user edit system:serviceaccount:${OSE_CI_PROJECT}:default -n ${OSE_CI_PROJECT}
 
-# CI Project
+# Process Nexus Template
+echo
+echo "Processing Nexus OSS Template..."
+echo
+oc create -f "${SCRIPT_BASE_DIR}/nexus-oss.json" -n ${OSE_CI_PROJECT} >/dev/null 2>&1
 
-# Process RHEL Template
-echo
-echo "Waiting for RHEL ImageStream Template..."
-echo
-oc create -n ${OSE_CI_PROJECT} -f"${SCRIPT_BASE_DIR}/support/templates/rhel7-is.json" >/dev/null 2>&1
-
-# Import Upstream Image
-echo
-echo "Importing RHEL7 ImageStream..."
-echo
-oc import-image -n ${OSE_CI_PROJECT} rhel7 >/dev/null 2>&1
+sleep 10
 
 # Process Nexus Template
 echo
-echo "Processing Nexus Template..."
+echo "Processing Nexus Pro Template..."
 echo
-oc process -v APPLICATION_NAME=nexus -f "${SCRIPT_BASE_DIR}/support/templates/nexus-persistent-template.json" | oc -n ${OSE_CI_PROJECT} create -f - >/dev/null 2>&1
+oc create -f "${SCRIPT_BASE_DIR}/nexus-pro.json" -n ${OSE_CI_PROJECT} >/dev/null 2>&1
 
-sleep 5
+sleep 10
+
+echo
+echo "Starting Nexus OSS binary build..."
+echo
+oc start-build -n ${OSE_CI_PROJECT} nexus-oss --follow >/dev/null 2>&1
+
+sleep 10
 
 echo
 echo "Starting Nexus Pro binary build..."
 echo
-oc start-build -n ${OSE_CI_PROJECT} nexus --from-dir="${SCRIPT_BASE_DIR}/pro" --follow >/dev/null 2>&1
+oc start-build -n ${OSE_CI_PROJECT} nexus-pro --follow >/dev/null 2>&1
 
 # Go back to CI project
 oc project ${OSE_CI_PROJECT} >/dev/null 2>&1
