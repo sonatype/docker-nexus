@@ -1,4 +1,5 @@
 FROM registry.access.redhat.com/rhel7/rhel
+MAINTAINER Sonatype <cloud-ops@sonatype.com>
 
 EXPOSE 8081
 
@@ -22,23 +23,20 @@ RUN mkdir -p ${NEXUS_HOME} \
   && chmod 777 $NEXUS_HOME \
    && mkdir -p $NEXUS_WORK && chmod -R 777 $NEXUS_WORK \
    && mkdir -p $NEXUS_REPOS && chmod -R 777 $NEXUS_REPOS \
-   && groupadd -r nexus -g 185 && useradd -u 185 -r -g nexus -m -d /home/jboss -s /sbin/nologin -c "Nexus user" nexus
 
-COPY scripts/fix-permissions.sh scripts/startup.sh /usr/local/bin/
-COPY conf/nexus.xml $NEXUS_HOME/conf/
+RUN useradd -r -u 200 -m -c "nexus role account" -d ${NEXUS_WORK} -s /bin/false nexus
+
+COPY scripts/fix-permissions.sh /usr/local/bin/
 
 RUN chmod 755 /usr/local/bin/fix-permissions.sh \
   && /usr/local/bin/fix-permissions.sh /opt/nexus \
   && /usr/local/bin/fix-permissions.sh $NEXUS_WORK \
   && /usr/local/bin/fix-permissions.sh $NEXUS_REPOS \
-  && /usr/local/bin/fix-permissions.sh $NEXUS_HOME/conf \
-  && /usr/local/bin/fix-permissions.sh /usr/local/bin/startup.sh
+  && /usr/local/bin/fix-permissions.sh $NEXUS_HOME/conf
 
 
 VOLUME ["/sonatype-work"]
 VOLUME ["/repositories"]
-
-WORKDIR $NEXUS_HOME
 
 USER nexus
 
@@ -49,4 +47,9 @@ ENV MIN_HEAP 256m
 ENV JAVA_OPTS -server -XX:MaxPermSize=192m -Djava.net.preferIPv4Stack=true
 ENV LAUNCHER_CONF ${NEXUS_HOME}/conf/jetty.xml ${NEXUS_HOME}/conf/jetty-requestlog.xml
 
-CMD /usr/local/bin/startup.sh
+CMD ${JAVA_HOME}/bin/java \
+  -Dnexus-work=${SONATYPE_WORK} -Dnexus-webapp-context-path=${CONTEXT_PATH} \
+  -Xms${MIN_HEAP} -Xmx${MAX_HEAP} \
+  -cp 'conf/:lib/*' \
+  ${JAVA_OPTS} \
+  org.sonatype.nexus.bootstrap.Launcher ${LAUNCHER_CONF}
