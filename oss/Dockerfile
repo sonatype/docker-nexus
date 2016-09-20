@@ -2,13 +2,13 @@ FROM       centos:centos7
 MAINTAINER Sonatype <cloud-ops@sonatype.com>
 
 ENV SONATYPE_WORK /sonatype-work
-ENV NEXUS_VERSION 2.13.0-01
+ENV NEXUS_VERSION 2.14.0-01
 
 ENV JAVA_HOME /opt/java
 ENV JAVA_VERSION_MAJOR 8
-ENV JAVA_VERSION_MINOR 74
-ENV JAVA_VERSION_BUILD 02
-
+ENV JAVA_VERSION_MINOR 102
+ENV JAVA_VERSION_BUILD 14
+             
 RUN yum install -y \
   curl tar createrepo \
   && yum clean all
