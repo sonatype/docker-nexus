@@ -24,7 +24,7 @@ To determine the port that the container is listening on:
 To test:
 
 ```
-$ curl http://localhost:8081/nexus/service/local/status
+$ curl http://localhost:8081/service/local/status
 ```
 
 To build, copy the Dockerfile and do the build:
