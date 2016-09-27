@@ -21,8 +21,8 @@ RUN mkdir -p ${NEXUS_HOME} \
   && mv /tmp/nexus-${NEXUS_VERSION}/* ${NEXUS_HOME}/ \
   && rm -rf /tmp/nexus-${NEXUS_VERSION} \
   && chmod 777 $NEXUS_HOME \
-   && mkdir -p $NEXUS_WORK && chmod -R 777 $NEXUS_WORK \
-   && mkdir -p $NEXUS_REPOS && chmod -R 777 $NEXUS_REPOS
+  && mkdir -p $NEXUS_WORK && chmod -R 777 $NEXUS_WORK \
+  && mkdir -p $NEXUS_REPOS && chmod -R 777 $NEXUS_REPOS
 
 RUN useradd -r -u 200 -m -c "nexus role account" -d ${NEXUS_WORK} -s /bin/false nexus
 
