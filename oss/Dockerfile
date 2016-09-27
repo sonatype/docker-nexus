@@ -50,7 +50,7 @@ ENV LAUNCHER_CONF ${NEXUS_HOME}/conf/jetty.xml ${NEXUS_HOME}/conf/jetty-requestl
 
 CMD ${JAVA_HOME}/bin/java \
   -Dnexus-work=${NEXUS_WORK} -Dnexus-webapp-context-path=${CONTEXT_PATH} \
-  -Dapplication-conf=${APPLICATION_CONF}
+  -Dapplication-conf=${APPLICATION_CONF} \
   -Xms${MIN_HEAP} -Xmx${MAX_HEAP} \
   -cp 'conf/:lib/*' \
   ${JAVA_OPTS} \
