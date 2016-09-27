@@ -7,7 +7,7 @@ ENV NEXUS_VERSION 2.13.0-01
 ENV NEXUS_HOME /opt/nexus/nexus
 ENV NEXUS_WORK /sonatype-work
 ENV NEXUS_REPOS /repositories
-
+ENV APPLICATION_CONF /conf
 
 # Run Yum Update
 RUN yum install -y java-1.8.0-openjdk-devel tar  \
@@ -22,7 +22,8 @@ RUN mkdir -p ${NEXUS_HOME} \
   && rm -rf /tmp/nexus-professional-${NEXUS_VERSION} \
   && chmod 777 $NEXUS_HOME \
   && mkdir -p $NEXUS_WORK && chmod -R 777 $NEXUS_WORK \
-  && mkdir -p $NEXUS_REPOS && chmod -R 777 $NEXUS_REPOS
+  && mkdir -p $NEXUS_REPOS && chmod -R 777 $NEXUS_REPOS \
+  && mkdir -p $APPLICATION_CONF && chmod -R 777 $APPLICATION_CONF
 
 RUN useradd -r -u 200 -m -c "nexus role account" -d ${NEXUS_WORK} -s /bin/false nexus
 
@@ -32,7 +33,8 @@ RUN chmod 755 /usr/local/bin/fix-permissions.sh \
   && /usr/local/bin/fix-permissions.sh /opt/nexus \
   && /usr/local/bin/fix-permissions.sh $NEXUS_WORK \
   && /usr/local/bin/fix-permissions.sh $NEXUS_REPOS \
-  && /usr/local/bin/fix-permissions.sh $NEXUS_HOME/conf
+  && /usr/local/bin/fix-permissions.sh $NEXUS_HOME/conf \
+  && /usr/local/bin/fix-permissions.sh $APPLICATION_CONF
 
 
 VOLUME ["/sonatype-work"]
