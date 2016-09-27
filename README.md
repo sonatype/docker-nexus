@@ -15,9 +15,9 @@ git clone -b ose https://github.com/sonatype/docker-nexus.git
 ## Quickstart
 
 If you would like to run the init.sh script provided in the repository,
-it will create an OpenShift project named 'nexus' within your OpenShift
-instance which has pre-made templates for both Nexus OSS and Nexus Pro.
-The script takes a single argument for an 'oss' or 'pro' installation.
+it will create an OpenShift project named `nexus` within your OpenShift
+instance which has pre-made templates for either Nexus OSS and Nexus Pro.
+The script takes a single argument for an `oss` or `pro` installation.
 
 ```
 cd docker-nexus/
@@ -25,4 +25,8 @@ cd docker-nexus/
 ```
 
 After using the init.sh script, browse to the OpenShift console and login.
-In the nexus project, click 'Add to Project' and search for Nexus. 
+In the nexus project, click `Add to Project` and search for Nexus. Click
+create and configure to create a Nexus service. Once the service is created,
+a new deployment can be deployed via the `nexus-oss` deployment. This
+deployment will create a pod for the Nexus instance. Nexus will now be
+available using the route created for your service.

@@ -36,7 +36,6 @@ RUN chmod 755 /usr/local/bin/fix-permissions.sh \
   && /usr/local/bin/fix-permissions.sh $NEXUS_HOME/conf \
   && /usr/local/bin/fix-permissions.sh $APPLICATION_CONF
 
-
 VOLUME ["/sonatype-work"]
 VOLUME ["/repositories"]
 
@@ -50,7 +49,8 @@ ENV JAVA_OPTS -server -XX:MaxPermSize=192m -Djava.net.preferIPv4Stack=true
 ENV LAUNCHER_CONF ${NEXUS_HOME}/conf/jetty.xml ${NEXUS_HOME}/conf/jetty-requestlog.xml
 
 CMD ${JAVA_HOME}/bin/java \
-  -Dnexus-work=${SONATYPE_WORK} -Dnexus-webapp-context-path=${CONTEXT_PATH} \
+  -Dnexus-work=${NEXUS_WORK} -Dnexus-webapp-context-path=${CONTEXT_PATH} \
+  -Dapplication-conf=${APPLICATION_CONF} \
   -Xms${MIN_HEAP} -Xmx${MAX_HEAP} \
   -cp 'conf/:lib/*' \
   ${JAVA_OPTS} \

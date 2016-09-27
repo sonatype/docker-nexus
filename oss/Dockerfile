@@ -7,7 +7,7 @@ ENV NEXUS_VERSION 2.13.0-01
 ENV NEXUS_HOME /opt/nexus/nexus
 ENV NEXUS_WORK /sonatype-work
 ENV NEXUS_REPOS /repositories
-ENV APPLICATION_CONF /test_conf
+ENV APPLICATION_CONF /conf
 
 # Run Yum Update
 RUN yum install -y java-1.8.0-openjdk-devel tar  \
