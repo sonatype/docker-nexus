@@ -26,7 +26,6 @@ cd docker-nexus/
 
 After using the init.sh script, browse to the OpenShift console and login.
 In the nexus project, click `Add to Project` and search for Nexus. Click
-create and configure to create a Nexus service. Once the service is created,
-a new deployment can be deployed via the `nexus-oss` deployment. This
-deployment will create a pod for the Nexus instance. Nexus will now be
-available using the route created for your service.
+create and configure to create a Nexus service. Wait until the service has
+been created and the deployment is successful. A Nexus instance should now
+be available on the configured service.
