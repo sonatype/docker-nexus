@@ -34,6 +34,7 @@ RUN useradd -r -u 200 -m -c "nexus role account" -d ${SONATYPE_WORK} -s /bin/fal
 
 VOLUME ${SONATYPE_WORK}
 
+EXPOSE 8081
 WORKDIR /opt/sonatype/nexus
 USER nexus
 ENV CONTEXT_PATH /nexus
