@@ -3,6 +3,11 @@
 Docker images for Sonatype Nexus Repository Manager 2 with the Oracle JDK.
 For Nexus Repository Manager 3, please refer to https://github.com/sonatype/docker-nexus3
 
+* [Notes](#notes)
+  * [Persistent Data](#persistent-data)
+  * [Adding Nexus Plugins](#adding-nexus-plugins)
+* [Getting Help](#getting-help)
+
 To build:
 ```
 # docker build --rm --tag sonatype/nexus oss/
@@ -105,3 +110,12 @@ Creating a docker image based on `sonatype/nexus` is the suggested
 process: plugins should be expanded to `/opt/sonatype/nexus/nexus/WEB-INF/plugin-repository`.
 See https://github.com/sonatype/docker-nexus/issues/9 for an example
 concerning the Nexus P2 plugins.
+
+## Getting Help
+
+Looking to contribute to our Docker image but need some help? There's a few ways to get information or our attention:
+
+* File a public issue [here on GitHub](https://github.com/sonatype/docker-nexus/issues)
+* Check out the [Nexus](http://stackoverflow.com/questions/tagged/nexus) tag on Stack Overflow
+* Pop into [our public HipChat room](https://www.hipchat.com/gW26B2y2Z) and ask us some questions
+* Check out the [Nexus Repository User List](https://groups.google.com/a/glists.sonatype.com/forum/?hl=en#!forum/nexus-users)
