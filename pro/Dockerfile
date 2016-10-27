@@ -19,7 +19,7 @@ LABEL vendor=Sonatype \
   com.sonatype.name="Nexus Repository Manager Pro base image"
 
 ENV SONATYPE_WORK /sonatype-work
-ENV NEXUS_VERSION 2.14.0-01
+ENV NEXUS_VERSION 2.14.1-01
 
 ENV JAVA_HOME /opt/java
 ENV JAVA_VERSION_MAJOR 8
