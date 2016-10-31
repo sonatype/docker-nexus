@@ -81,7 +81,7 @@ process, which runs as UID 200.
 
 There are two general approaches to handling persistent
 storage requirements with Docker. See [Managing Data in
-Containers](https://docs.docker.com/userguide/dockervolumes/) for
+Containers](https://docs.docker.com/engine/tutorials/dockervolumes/) for
 additional information.
 
   1. *Use a data volume container*.  Since data volumes are persistent
