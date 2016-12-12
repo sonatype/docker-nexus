@@ -18,14 +18,16 @@ LABEL vendor=Sonatype \
   com.sonatype.license="Apache License, Version 2.0" \
   com.sonatype.name="Nexus Repository Manager OSS base image"
 
+ARG NEXUS_VERSION=2.14.1-01
+ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/oss/nexus-${NEXUS_VERSION}-bundle.tar.gz
+
 ENV SONATYPE_WORK /sonatype-work
-ENV NEXUS_VERSION 2.14.1-01
 
 ENV JAVA_HOME /opt/java
 ENV JAVA_VERSION_MAJOR 8
 ENV JAVA_VERSION_MINOR 102
 ENV JAVA_VERSION_BUILD 14
-             
+
 RUN yum install -y \
   curl tar createrepo \
   && yum clean all
@@ -41,7 +43,7 @@ RUN mkdir -p /opt \
 
 RUN mkdir -p /opt/sonatype/nexus \
   && curl --fail --silent --location --retry 3 \
-    https://download.sonatype.com/nexus/oss/nexus-${NEXUS_VERSION}-bundle.tar.gz \
+    ${NEXUS_DOWNLOAD_URL} \
   | gunzip \
   | tar x -C /tmp nexus-${NEXUS_VERSION} \
   && mv /tmp/nexus-${NEXUS_VERSION}/* /opt/sonatype/nexus/ \
@@ -65,4 +67,3 @@ CMD ${JAVA_HOME}/bin/java \
   -cp 'conf/:lib/*' \
   ${JAVA_OPTS} \
   org.sonatype.nexus.bootstrap.Launcher ${LAUNCHER_CONF}
-
