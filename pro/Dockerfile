@@ -65,6 +65,7 @@ ENV JAVA_OPTS -server -Djava.net.preferIPv4Stack=true
 ENV LAUNCHER_CONF ./conf/jetty.xml ./conf/jetty-requestlog.xml
 CMD ${JAVA_HOME}/bin/java \
   -Dnexus-work=${SONATYPE_WORK} -Dnexus-webapp-context-path=${CONTEXT_PATH} \
+  -Djava.util.prefs.userRoot=${SONATYPE_WORK}/javaprefs \
   -Xms${MIN_HEAP} -Xmx${MAX_HEAP} \
   -cp 'conf/:lib/*' \
   ${JAVA_OPTS} \
