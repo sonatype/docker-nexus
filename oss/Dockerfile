@@ -51,7 +51,8 @@ RUN mkdir -p /opt/sonatype/nexus \
   && mv /tmp/nexus-${NEXUS_VERSION}/* /opt/sonatype/nexus/ \
   && rm -rf /tmp/nexus-${NEXUS_VERSION}
 
-RUN useradd -r -u 200 -m -c "nexus role account" -d ${SONATYPE_WORK} -s /bin/false nexus
+RUN useradd -r -u 200 -m -c "nexus role account" -d ${SONATYPE_WORK} -s /bin/false nexus \
+    && echo 'nexus - nofile 65536' >> /etc/security/limits.conf
 
 VOLUME ${SONATYPE_WORK}
 
