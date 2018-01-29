@@ -18,7 +18,7 @@ LABEL vendor=Sonatype \
   com.sonatype.license="Apache License, Version 2.0" \
   com.sonatype.name="Nexus Repository Manager Pro base image"
 
-ARG NEXUS_VERSION=2.14.5-02
+ARG NEXUS_VERSION=2.14.6-02
 ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/professional-bundle/nexus-professional-${NEXUS_VERSION}-bundle.tar.gz
 
 ENV SONATYPE_WORK=/sonatype-work \
