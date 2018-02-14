@@ -29,7 +29,7 @@ node('ubuntu-zion') {
       OsTools.runSafe(this, "docker system prune -a -f")
 
       def checkoutDetails = checkout scm
-      
+
       dockerImages = [
         [ dockerFilePath: "${pwd()}/oss/Dockerfile", imageTag: "${imageName}:oss", flavor: "oss" ],
         [ dockerFilePath: "${pwd()}/pro/Dockerfile", imageTag: "${imageName}:oss", flavor: "pro" ]
@@ -101,7 +101,7 @@ node('ubuntu-zion') {
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'DarthHaterDockerHub',
             usernameVariable: 'DOCKERHUB_API_USERNAME', passwordVariable: 'DOCKERHUB_API_PASSWORD']]) {
         dockerImages.each {
-            def imageId = it.imageTag
+            imageId = it.imageTag
             def tags = getTags(it.flavor, version)
             tags.each {
                 OsTools.runSafe(this, "docker tag ${imageId} ${organization}/${dockerHubRepository}:${it}")
