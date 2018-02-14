@@ -9,8 +9,7 @@ import com.sonatype.jenkins.pipeline.OsTools
 
 properties([
   parameters([
-    string(defaultValue: '', description: 'New Nexus Repository Manager Version', name: 'nexus_repository_manager_version'),
-    string(defaultValue: '', description: 'New Nexus Repository Manager Version Sha256', name: 'nexus_repository_manager_version_sha')
+    string(defaultValue: '', description: 'New Nexus Repository Manager Version', name: 'nexus_repository_manager_version')
   ])
 ])
 
@@ -52,7 +51,7 @@ node('ubuntu-zion') {
       }
       gitHub = new GitHub(this, "${organization}/${gitHubRepository}", apiToken)
 
-      if (params.nexus_repository_manager_version && params.nexus_repository_manager_version_sha) {
+      if (params.nexus_repository_manager_version) {
         stage('Update Repository Manager Version') {
           OsTools.runSafe(this, "git checkout ${branch}")
           dockerFileLocations.each { updateRepositoryManagerVersion(it) }
@@ -72,12 +71,11 @@ node('ubuntu-zion') {
         gitHub.statusUpdate commitId, 'success', 'build', 'Build succeeded'
       }
     }
-    if (params.nexus_repository_manager_version
-        && params.nexus_repository_manager_version_sha) {
+    if (params.nexus_repository_manager_version) {
       stage('Commit Repository Manager Version Update') {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'integrations-github-api',
                         usernameVariable: 'GITHUB_API_USERNAME', passwordVariable: 'GITHUB_API_PASSWORD']]) {
-          def commitMessage = params.nexus_repository_manager_version && params.nexus_repository_manager_version_sha ?
+          def commitMessage = params.nexus_repository_manager_version ?
                 "Update Repository Manager to ${params.nexus_repository_manager_version}." : ""
           OsTools.runSafe(this, """
             git add .
@@ -158,17 +156,9 @@ def readVersion() {
 def updateRepositoryManagerVersion(dockerFileLocation) {
   def dockerFile = readFile(file: dockerFileLocation)
 
-  def metaVersionRegex = /(version=")(\d\.\d{1,3}\.\d\-\d{2})(" \\)/
-  def metaShortVersionRegex = /(release=")(\d\.\d{1,3}\.\d)(" \\)/
-
   def versionRegex = /(ARG NEXUS_VERSION=)(\d\.\d{1,3}\.\d\-\d{2})/
-  def shaRegex = /(ARG NEXUS_DOWNLOAD_SHA256_HASH=)([A-Fa-f0-9]{64})/
 
-  dockerFile = dockerFile.replaceAll(metaVersionRegex, "\$1${params.nexus_repository_manager_version}\$3")
-  dockerFile = dockerFile.replaceAll(metaShortVersionRegex,
-    "\$1${params.nexus_repository_manager_version.substring(0, params.nexus_repository_manager_version.indexOf('-'))}\$3")
   dockerFile = dockerFile.replaceAll(versionRegex, "\$1${params.nexus_repository_manager_version}")
-  dockerFile = dockerFile.replaceAll(shaRegex, "\$1${params.nexus_repository_manager_version_sha}")
 
   writeFile(file: dockerFileLocation, text: dockerFile)
 }
