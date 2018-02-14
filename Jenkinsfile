@@ -29,10 +29,10 @@ node('ubuntu-zion') {
       OsTools.runSafe(this, "docker system prune -a -f")
 
       def checkoutDetails = checkout scm
-      def pwd = pwd()
+      
       dockerImages = [
-        [ dockerFilePath: "${pwd}/oss/Dockerfile", imageTag = "${imageName}:oss", flavor: "oss" ],
-        [ dockerFilePath: "${pwd}/pro/Dockerfile", imageTag = "${imageName}:oss", flavor: "pro" ]
+        [ dockerFilePath: "${pwd()}/oss/Dockerfile", imageTag: "${imageName}:oss", flavor: "oss" ],
+        [ dockerFilePath: "${pwd()}/pro/Dockerfile", imageTag: "${imageName}:oss", flavor: "pro" ]
       ]
 
       branch = checkoutDetails.GIT_BRANCH == 'origin/master' ? 'master' : checkoutDetails.GIT_BRANCH
