@@ -107,13 +107,13 @@ node('ubuntu-zion') {
             imageId = it.imageTag
             def tags = getTags(it.flavor, version)
             tags.each {
-                OsTools.runSafe(this, "docker tag ${imageId} ${imageName}:${it}")
+                OsTools.runSafe(this, "docker tag ${imageId} ${organization.toLowerCase()}/${dockerHubRepository}:${it}")
             }
         }
         OsTools.runSafe(this, """
             docker login --username ${env.DOCKERHUB_API_USERNAME} --password ${env.DOCKERHUB_API_PASSWORD}
             """)
-        OsTools.runSafe(this, "docker push ${imageName}")
+        OsTools.runSafe(this, "docker push ${organization.toLowerCase()}/${dockerHubRepository}")
         
         response = OsTools.runSafe(this, """
           curl -X POST https://hub.docker.com/v2/users/login/ \
@@ -130,7 +130,7 @@ node('ubuntu-zion') {
         response = httpRequest customHeaders: [[name: 'authorization', value: "JWT ${dockerhubApiToken}"]],
             acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON', httpMode: 'PATCH',
             requestBody: "{ \"full_description\": \"${readme}\" }",
-            url: "https://hub.docker.com/v2/repositories/${organization}/${dockerHubRepository}/"
+            url: "https://hub.docker.com/v2/repositories/${organization.toLowerCase()}/${dockerHubRepository}/"
       }
     }
     stage('Push tags') {
