@@ -15,7 +15,7 @@ properties([
 
 node('ubuntu-zion') {
   def commitId, commitDate, version, imageId, branch, dockerImages
-  def organization = 'DarthHater',
+  def organization = 'darthhater',
       gitHubRepository = 'docker-nexus',
       credentialsId = 'integrations-github-api',
       imageName = 'darthhater/nexus',
@@ -107,13 +107,13 @@ node('ubuntu-zion') {
             imageId = it.imageTag
             def tags = getTags(it.flavor, version)
             tags.each {
-                OsTools.runSafe(this, "docker tag ${imageId} ${organization}/${dockerHubRepository}:${it}")
+                OsTools.runSafe(this, "docker tag ${imageId} ${imageName}:${it}")
             }
         }
         OsTools.runSafe(this, """
             docker login --username ${env.DOCKERHUB_API_USERNAME} --password ${env.DOCKERHUB_API_PASSWORD}
             """)
-        OsTools.runSafe(this, "docker push ${organization}/${dockerHubRepository}")
+        OsTools.runSafe(this, "docker push ${imageName}")
         
         response = OsTools.runSafe(this, """
           curl -X POST https://hub.docker.com/v2/users/login/ \
