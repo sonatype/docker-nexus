@@ -39,10 +39,14 @@ node('ubuntu-zion') {
       commitId = checkoutDetails.GIT_COMMIT
       commitDate = OsTools.runSafe(this, "git show -s --format=%cd --date=format:%Y%m%d-%H%M%S ${commitId}")
 
+      println("Print date")
+
       // OsTools.runSafe(this, 'git config --global user.email sonatype-ci@sonatype.com')
       // OsTools.runSafe(this, 'git config --global user.name Sonatype CI')
 
       version = readVersion()
+
+      println("Read Version")
 
       def apiToken
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentialsId,
@@ -53,6 +57,7 @@ node('ubuntu-zion') {
 
       if (params.nexus_repository_manager_version) {
         stage('Update Repository Manager Version') {
+          println(params.nexus_repository_manager_version)
           OsTools.runSafe(this, "git checkout ${branch}")
           dockerImages.each { updateRepositoryManagerVersion(it) }
           version = params.nexus_repository_manager_version
