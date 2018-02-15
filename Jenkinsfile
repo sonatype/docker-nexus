@@ -91,8 +91,9 @@ node('ubuntu-zion') {
     }
     stage('Archive') {
       dir('build/target') {
-        OsTools.runSafe(this, "docker save ${imageName} | gzip > ${archiveName}.tar.gz")
+        OsTools.runSafe(this, "docker save ${imageName}:oss ${imageName}:pro | gzip > ${archiveName}.tar.gz")
         archiveArtifacts artifacts: "${archiveName}.tar.gz", onlyIfSuccessful: true
+        println("Archiving image")
       }
     }
     if (branch != 'master') {
@@ -100,6 +101,7 @@ node('ubuntu-zion') {
     }
     input 'Push image and tags?'
     stage('Push image and tags') {
+      println("Pushing image")
       def dockerhubApiToken
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'DarthHaterDockerHub',
             usernameVariable: 'DOCKERHUB_API_USERNAME', passwordVariable: 'DOCKERHUB_API_PASSWORD']]) {
