@@ -15,7 +15,7 @@ properties([
 
 node('ubuntu-zion') {
   def commitId, commitDate, version, imageId, branch, dockerImages
-  def organization = 'darthhater',
+  def organization = 'DarthHater',
       gitHubRepository = 'docker-nexus',
       credentialsId = 'integrations-github-api',
       imageName = 'darthhater/nexus',
