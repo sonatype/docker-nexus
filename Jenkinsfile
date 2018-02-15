@@ -32,7 +32,7 @@ node('ubuntu-zion') {
 
       dockerImages = [
         [ dockerFilePath: "${pwd()}/oss/Dockerfile", imageTag: "${imageName}:oss", flavor: "oss" ],
-        [ dockerFilePath: "${pwd()}/pro/Dockerfile", imageTag: "${imageName}:oss", flavor: "pro" ]
+        [ dockerFilePath: "${pwd()}/pro/Dockerfile", imageTag: "${imageName}:pro", flavor: "pro" ]
       ]
 
       branch = checkoutDetails.GIT_BRANCH == 'origin/master' ? 'master' : checkoutDetails.GIT_BRANCH
