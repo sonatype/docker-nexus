@@ -91,8 +91,10 @@ node('ubuntu-zion') {
     }
     stage('Archive') {
       dir('build/target') {
-        OsTools.runSafe(this, "docker save ${imageName}:oss ${imageName}:pro | gzip > ${archiveName}.tar.gz")
-        archiveArtifacts artifacts: "${archiveName}.tar.gz", onlyIfSuccessful: true
+        dockerImages.each {
+            OsTools.runSafe(this, "docker save ${it.imageTag} | gzip > ${archiveName}-${it.flavor}.tar.gz")
+        }
+        archiveArtifacts artifacts: "${archiveName}-*.tar.gz", onlyIfSuccessful: true
         println("Archiving image")
       }
     }
