@@ -44,8 +44,6 @@ node('ubuntu-zion') {
 
       version = readVersion()
 
-      println("Read Version")
-
       def apiToken
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentialsId,
                         usernameVariable: 'GITHUB_API_USERNAME', passwordVariable: 'GITHUB_API_PASSWORD']]) {
@@ -55,7 +53,6 @@ node('ubuntu-zion') {
 
       if (params.nexus_repository_manager_version) {
         stage('Update Repository Manager Version') {
-          println(params.nexus_repository_manager_version)
           OsTools.runSafe(this, "git checkout ${branch}")
           dockerImages.each { updateRepositoryManagerVersion(it.dockerFilePath) }
           version = params.nexus_repository_manager_version
@@ -95,7 +92,6 @@ node('ubuntu-zion') {
             OsTools.runSafe(this, "docker save ${it.imageTag} | gzip > ${archiveName}-${it.flavor}.tar.gz")
         }
         archiveArtifacts artifacts: "${archiveName}-*.tar.gz", onlyIfSuccessful: true
-        println("Archiving image")
       }
     }
     if (branch != 'master') {
