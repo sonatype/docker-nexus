@@ -57,7 +57,7 @@ node('ubuntu-zion') {
         stage('Update Repository Manager Version') {
           println(params.nexus_repository_manager_version)
           OsTools.runSafe(this, "git checkout ${branch}")
-          dockerImages.each { updateRepositoryManagerVersion(it) }
+          dockerImages.each { updateRepositoryManagerVersion(it.dockerFilePath) }
           version = params.nexus_repository_manager_version
         }
       }
