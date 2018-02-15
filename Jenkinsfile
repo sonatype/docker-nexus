@@ -39,8 +39,6 @@ node('ubuntu-zion') {
       commitId = checkoutDetails.GIT_COMMIT
       commitDate = OsTools.runSafe(this, "git show -s --format=%cd --date=format:%Y%m%d-%H%M%S ${commitId}")
 
-      println("Print date")
-
       // OsTools.runSafe(this, 'git config --global user.email sonatype-ci@sonatype.com')
       // OsTools.runSafe(this, 'git config --global user.name Sonatype CI')
 
@@ -155,7 +153,7 @@ node('ubuntu-zion') {
 }
 
 def readVersion() {
-  def content = readFile 'Dockerfile'
+  def content = readFile 'oss/Dockerfile'
   for (line in content.split('\n')) {
     if (line.startsWith('ARG NEXUS_VERSION=')) {
       return line.substring(18).split('-')[0]
