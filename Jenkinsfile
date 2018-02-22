@@ -31,8 +31,8 @@ node('ubuntu-zion') {
       def checkoutDetails = checkout scm
 
       dockerImages = [
-        [ dockerFilePath: "${pwd()}/oss/Dockerfile", imageTag: "${imageName}:oss", flavor: "oss" ],
-        [ dockerFilePath: "${pwd()}/pro/Dockerfile", imageTag: "${imageName}:pro", flavor: "pro" ]
+        [ dockerFilePath: "${pwd()}/oss/Dockerfile", imageTag: "${imageName}:oss", imageId: "", flavor: "oss" ],
+        [ dockerFilePath: "${pwd()}/pro/Dockerfile", imageTag: "${imageName}:pro", imageId: "", flavor: "pro" ]
       ]
 
       branch = checkoutDetails.GIT_BRANCH == 'origin/master' ? 'master' : checkoutDetails.GIT_BRANCH
@@ -59,9 +59,9 @@ node('ubuntu-zion') {
     }
     stage('Build') {
       gitHub.statusUpdate commitId, 'pending', 'build', 'Build is running'
-      dockerImages.each {
-        def hash = OsTools.runSafe(this, "docker build --quiet --no-cache --tag ${it.imageTag} -f ${it.dockerFilePath} .")
-        it.imageTag = hash.split(':')[1]
+      dockerImages.each { image ->
+        def hash = OsTools.runSafe(this, "docker build --quiet --no-cache --tag ${image.imageTag} -f ${image.dockerFilePath} .")
+        iimage.imageId = hash.split(':')[1]
 
         if (currentBuild.result == 'FAILURE') {
             gitHub.statusUpdate commitId, 'failure', 'build', 'Build failed'
@@ -87,7 +87,7 @@ node('ubuntu-zion') {
     stage('Archive') {
       dir('build/target') {
         dockerImages.each {
-            OsTools.runSafe(this, "docker save ${it.imageTag} | gzip > ${archiveName}-${it.flavor}.tar.gz")
+            OsTools.runSafe(this, "docker save ${it.imageId} | gzip > ${archiveName}-${it.flavor}.tar.gz")
         }
         archiveArtifacts artifacts: "${archiveName}-*.tar.gz", onlyIfSuccessful: true
       }
@@ -100,10 +100,9 @@ node('ubuntu-zion') {
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-hub-credentials',
             usernameVariable: 'DOCKERHUB_API_USERNAME', passwordVariable: 'DOCKERHUB_API_PASSWORD']]) {
         dockerImages.each { image ->
-            imageId = image.imageTag
             def tags = getTags(image.flavor, version)
             tags.each { tag ->
-                OsTools.runSafe(this, "docker tag ${imageId} ${organization}/${dockerHubRepository}:${tag}")
+                OsTools.runSafe(this, "docker tag ${owner.imageId} ${organization}/${dockerHubRepository}:${tag}")
             }
         }
         OsTools.runSafe(this, """
