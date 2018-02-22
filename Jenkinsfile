@@ -61,7 +61,7 @@ node('ubuntu-zion') {
       gitHub.statusUpdate commitId, 'pending', 'build', 'Build is running'
       dockerImages.each { image ->
         def hash = OsTools.runSafe(this, "docker build --quiet --no-cache --tag ${image.imageTag} -f ${image.dockerFilePath} .")
-        iimage.imageId = hash.split(':')[1]
+        image.imageId = hash.split(':')[1]
 
         if (currentBuild.result == 'FAILURE') {
             gitHub.statusUpdate commitId, 'failure', 'build', 'Build failed'
@@ -102,7 +102,7 @@ node('ubuntu-zion') {
         dockerImages.each { image ->
             def tags = getTags(image.flavor, version)
             tags.each { tag ->
-                OsTools.runSafe(this, "docker tag ${owner.imageId} ${organization}/${dockerHubRepository}:${tag}")
+                OsTools.runSafe(this, "docker tag ${image.imageId} ${organization}/${dockerHubRepository}:${tag}")
             }
         }
         OsTools.runSafe(this, """
