@@ -75,7 +75,7 @@ node('ubuntu-zion') {
       stage('Commit Repository Manager Version Update') {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'integrations-github-api',
                         usernameVariable: 'GITHUB_API_USERNAME', passwordVariable: 'GITHUB_API_PASSWORD']]) {
-          def commitMessage = params.nexus_repository_manager_version ? "Update Repository Manager to ${params.nexus_repository_manager_version}." : ""
+          def commitMessage = "Update Repository Manager to ${params.nexus_repository_manager_version}."
           OsTools.runSafe(this, """
             git add .
             git commit -m '${commitMessage}'
