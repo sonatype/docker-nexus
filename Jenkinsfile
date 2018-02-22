@@ -49,13 +49,12 @@ node('ubuntu-zion') {
         apiToken = env.GITHUB_API_PASSWORD
       }
       gitHub = new GitHub(this, "${organization}/${gitHubRepository}", apiToken)
-
-      if (params.nexus_repository_manager_version) {
-        stage('Update Repository Manager Version') {
-          OsTools.runSafe(this, "git checkout ${branch}")
-          dockerImages.each { updateRepositoryManagerVersion(it.dockerFilePath) }
-          version = params.nexus_repository_manager_version
-        }
+    }
+    if (params.nexus_repository_manager_version) {
+      stage('Update Repository Manager Version') {
+        OsTools.runSafe(this, "git checkout ${branch}")
+        dockerImages.each { updateRepositoryManagerVersion(it.dockerFilePath) }
+        version = params.nexus_repository_manager_version
       }
     }
     stage('Build') {
