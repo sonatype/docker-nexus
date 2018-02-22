@@ -97,7 +97,6 @@ node('ubuntu-zion') {
     }
     input 'Push image and tags?'
     stage('Push image and tags') {
-      def dockerhubApiToken
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-hub-credentials',
             usernameVariable: 'DOCKERHUB_API_USERNAME', passwordVariable: 'DOCKERHUB_API_PASSWORD']]) {
         dockerImages.each {
@@ -118,7 +117,7 @@ node('ubuntu-zion') {
             -d '{ "username": "${env.DOCKERHUB_API_USERNAME}", "password": "${env.DOCKERHUB_API_PASSWORD}" }'
         """)
         token = readJSON text: response
-        dockerhubApiToken = token.token
+        def dockerhubApiToken = token.token
 
         def readme = readFile file: 'README.md', encoding: 'UTF-8'
         readme = readme.replaceAll("(?s)<!--.*?-->", "")
