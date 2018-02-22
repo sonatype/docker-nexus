@@ -99,11 +99,11 @@ node('ubuntu-zion') {
     stage('Push image and tags') {
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-hub-credentials',
             usernameVariable: 'DOCKERHUB_API_USERNAME', passwordVariable: 'DOCKERHUB_API_PASSWORD']]) {
-        dockerImages.each {
-            imageId = it.imageTag
-            def tags = getTags(it.flavor, version)
-            tags.each {
-                OsTools.runSafe(this, "docker tag ${imageId} ${organization}/${dockerHubRepository}:${it}")
+        dockerImages.each { image ->
+            imageId = image.imageTag
+            def tags = getTags(image.flavor, version)
+            tags.each { tag ->
+                OsTools.runSafe(this, "docker tag ${imageId} ${organization}/${dockerHubRepository}:${tag}")
             }
         }
         OsTools.runSafe(this, """
