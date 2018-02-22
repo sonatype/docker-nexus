@@ -177,4 +177,3 @@ def updateRepositoryManagerVersion(dockerFileLocation) {
 
   writeFile(file: dockerFileLocation, text: dockerFile)
 }
-
