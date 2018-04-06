@@ -14,7 +14,7 @@ properties([
 ])
 
 node('ubuntu-zion') {
-  def commitId, commitDate, version, imageId, branch, dockerImages
+  def commitId, commitDate, longVersion, imageId, branch, dockerImages
   def organization = 'sonatype',
       gitHubRepository = 'docker-nexus',
       credentialsId = 'integrations-github-api',
@@ -41,7 +41,7 @@ node('ubuntu-zion') {
       OsTools.runSafe(this, 'git config --global user.email sonatype-ci@sonatype.com')
       OsTools.runSafe(this, 'git config --global user.name Sonatype CI')
 
-      version = readVersion()
+      longVersion = readLongVersion()
 
       def apiToken
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentialsId,
@@ -54,7 +54,7 @@ node('ubuntu-zion') {
       stage('Update Repository Manager Version') {
         OsTools.runSafe(this, "git checkout ${branch}")
         dockerImages.each { updateRepositoryManagerVersion(it.dockerFilePath) }
-        version = params.nexus_repository_manager_version
+        longVersion = params.nexus_repository_manager_version
       }
     }
     stage('Build') {
@@ -109,36 +109,20 @@ node('ubuntu-zion') {
             docker login --username ${env.DOCKERHUB_API_USERNAME} --password ${env.DOCKERHUB_API_PASSWORD}
             """)
         OsTools.runSafe(this, "docker push ${organization}/${dockerHubRepository}")
-        
-        response = OsTools.runSafe(this, """
-          curl -X POST https://hub.docker.com/v2/users/login/ \
-            -H 'cache-control: no-cache' -H 'content-type: application/json' \
-            -d '{ "username": "${env.DOCKERHUB_API_USERNAME}", "password": "${env.DOCKERHUB_API_PASSWORD}" }'
-        """)
-        token = readJSON text: response
-        def dockerhubApiToken = token.token
-
-        def readme = readFile file: 'README.md', encoding: 'UTF-8'
-        readme = readme.replaceAll("(?s)<!--.*?-->", "")
-        readme = readme.replace("\"", "\\\"")
-        readme = readme.replace("\n", "\\n")
-        response = httpRequest customHeaders: [[name: 'authorization', value: "JWT ${dockerhubApiToken}"]],
-            acceptType: 'APPLICATION_JSON', contentType: 'APPLICATION_JSON', httpMode: 'PATCH',
-            requestBody: "{ \"full_description\": \"${readme}\" }",
-            url: "https://hub.docker.com/v2/repositories/${organization}/${dockerHubRepository}/"
       }
     }
     stage('Push tags') {
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentialsId,
                         usernameVariable: 'GITHUB_API_USERNAME', passwordVariable: 'GITHUB_API_PASSWORD']]) {
-        OsTools.runSafe(this, "git tag ${version}")
+        def shortVersion = getShortVersion(longVersion)
+        OsTools.runSafe(this, "git tag ${shortVersion}")
         OsTools.runSafe(this, """
           git push \
           https://${env.GITHUB_API_USERNAME}:${env.GITHUB_API_PASSWORD}@github.com/${organization}/${gitHubRepository}.git \
-            ${version}
+            ${shortVersion}
         """)
       }
-      OsTools.runSafe(this, "git tag -d ${version}")
+      OsTools.runSafe(this, "git tag -d ${shortVersion}")
     }
   } finally {
     OsTools.runSafe(this, "docker logout")
@@ -147,18 +131,22 @@ node('ubuntu-zion') {
   }
 }
 
-def readVersion() {
+def readLongVersion() {
   def content = readFile 'oss/Dockerfile'
   for (line in content.split('\n')) {
     if (line.startsWith('ARG NEXUS_VERSION=')) {
-      return line.substring(18).split('-')[0]
+      return line.substring(18)
     }
   }
   error 'Could not determine version.'
 }
 
+def getShortVersion(longVersion) {
+  return longVersion.split('-')[0]
+}
+
 def getTags(flavor, longVersion) {
-    def shortVersion = longVersion.split('-')[0]
+    def shortVersion = getShortVersion(longVersion)
     if (flavor == "pro") {
         return ["pro", "pro-${shortVersion}", "pro-${longVersion}"]
     }
