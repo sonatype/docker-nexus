@@ -100,7 +100,7 @@ node('ubuntu-zion') {
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-hub-credentials',
             usernameVariable: 'DOCKERHUB_API_USERNAME', passwordVariable: 'DOCKERHUB_API_PASSWORD']]) {
         dockerImages.each { image ->
-            def tags = getTags(image.flavor, version)
+            def tags = getTags(image.flavor, longVersion)
             tags.each { tag ->
                 OsTools.runSafe(this, "docker tag ${image.imageId} ${organization}/${dockerHubRepository}:${tag}")
             }
