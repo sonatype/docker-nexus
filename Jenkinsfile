@@ -112,9 +112,9 @@ node('ubuntu-zion') {
       }
     }
     stage('Push tags') {
+      def shortVersion = getShortVersion(longVersion)
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentialsId,
                         usernameVariable: 'GITHUB_API_USERNAME', passwordVariable: 'GITHUB_API_PASSWORD']]) {
-        def shortVersion = getShortVersion(longVersion)
         OsTools.runSafe(this, "git tag ${shortVersion}")
         OsTools.runSafe(this, """
           git push \
