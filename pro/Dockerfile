@@ -21,7 +21,7 @@ LABEL vendor=Sonatype \
 ARG NEXUS_VERSION=2.14.10-01
 ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/professional-bundle/nexus-professional-${NEXUS_VERSION}-bundle.tar.gz
 
-ENV SONATYPE_WORK=/sonatype-work \
+ENV SONATYPE_WORK=/opt/sonatype/nexus-work \
     JAVA_HOME=/opt/java \
     JAVA_VERSION_MAJOR=8 \
     JAVA_VERSION_MINOR=192 \
@@ -55,8 +55,11 @@ RUN useradd -r -u 200 -m -c "nexus role account" -d ${SONATYPE_WORK} -s /bin/fal
 
 VOLUME ${SONATYPE_WORK}
 
-EXPOSE 8081
+EXPOSE 8081/tcp
+EXPOSE 8443/tcp
+
 WORKDIR /opt/sonatype/nexus
+
 USER nexus
 ENV CONTEXT_PATH /nexus
 ENV MAX_HEAP 768m
