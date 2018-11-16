@@ -42,6 +42,8 @@ $ docker build --rm=true --tag=sonatype/nexus .
 
 ## Notes
 
+* The UI is accessible at: http://localhost:8081/nexus/
+
 * Default credentials are: `admin` / `admin123`
 
 * It can take some time (2-3 minutes) for the service to launch in a
