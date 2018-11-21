@@ -158,7 +158,7 @@ def getTags(flavor, longVersion) {
 def updateRepositoryManagerVersion(dockerFileLocation) {
   def dockerFile = readFile(file: dockerFileLocation)
 
-  def versionRegex = /(ARG NEXUS_VERSION=)(\d\.\d{1,3}\.\d\-\d{2})/
+  def versionRegex = /(ARG NEXUS_VERSION=)(\d\.\d{1,3}\.\d{1,3}\-\d{2})/
 
   dockerFile = dockerFile.replaceAll(versionRegex, "\$1${params.nexus_repository_manager_version}")
 
