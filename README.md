@@ -1,7 +1,7 @@
 # sonatype/docker-nexus
 
 Docker images for Sonatype Nexus Repository Manager 2 with the Oracle JDK.
-For Nexus Repository Manager 3, please refer to https://github.com/sonatype/nexus3
+For Nexus Repository Manager 3, please refer to https://github.com/sonatype/docker-nexus3
 
 * [Notes](#notes)
   * [Persistent Data](#persistent-data)
