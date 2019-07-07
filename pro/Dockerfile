@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM       centos:centos7
-MAINTAINER Sonatype <cloud-ops@sonatype.com>
+FROM registry.access.redhat.com/ubi8/ubi
+
 LABEL vendor=Sonatype \
+  maintainer="Sonatype <cloud-ops@sonatype.com>" \
   com.sonatype.license="Apache License, Version 2.0" \
   com.sonatype.name="Nexus Repository Manager Pro base image"
 
@@ -23,8 +24,7 @@ ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/professional-bundle/n
 
 ENV SONATYPE_WORK=/sonatype-work
 
-RUN yum install -y \
-  curl tar createrepo java-1.8.0-openjdk \
+RUN yum install -y hostname java-1.8.0-openjdk \
   && yum clean all
 
 RUN mkdir -p /opt/sonatype/nexus \

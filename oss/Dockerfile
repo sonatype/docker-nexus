@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM registry.access.redhat.com/ubi8/ubi-minimal
+FROM registry.access.redhat.com/ubi8/ubi
 
 LABEL vendor=Sonatype \
   maintainer="Sonatype <cloud-ops@sonatype.com>" \
@@ -25,15 +25,8 @@ ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/oss/nexus-${NEXUS_VER
 ENV SONATYPE_WORK=/sonatype-work
 ENV NEXUS_HOME=/opt/sonatype/nexus
 
-RUN microdnf install tar \
-                     gzip \
-                     shadow-utils \
-                     curl \
-                     java-1.8.0-openjdk && \
-    microdnf clean all
-# RUN yum install -y \
-#   hostname java-1.8.0-openjdk \
-#   && yum clean all
+RUN yum install -y hostname java-1.8.0-openjdk \
+    && yum clean all
 
 RUN mkdir -p ${NEXUS_HOME} && \
   curl --fail --silent --location --retry 3 ${NEXUS_DOWNLOAD_URL} | \
