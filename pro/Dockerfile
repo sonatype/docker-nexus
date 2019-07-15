@@ -24,7 +24,7 @@ ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/professional-bundle/n
 
 ENV SONATYPE_WORK=/sonatype-work
 
-RUN yum install -y hostname java-1.8.0-openjdk \
+RUN yum install -y --disableplugin=subscription-manager hostname java-1.8.0-openjdk \
   && yum clean all
 
 RUN mkdir -p /opt/sonatype/nexus \
