@@ -1,6 +1,6 @@
 # sonatype/docker-nexus
 
-Docker images for Sonatype Nexus Repository Manager 2 with the OpenJDK.
+Docker images for Sonatype Nexus Repository Manager 2 with the OpenJDK, starting with 2.14.14 the [Red Hat Universal Base Image](https://www.redhat.com/en/blog/introducing-red-hat-universal-base-image) is used as the base image while earlier versions used CentOS.
 For Nexus Repository Manager 3, please refer to https://github.com/sonatype/docker-nexus3
 
 * [Notes](#notes)
