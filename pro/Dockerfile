@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM registry.access.redhat.com/ubi8/ubi
+FROM registry.access.redhat.com/ubi7/ubi
 
 LABEL vendor=Sonatype \
   maintainer="Sonatype <cloud-ops@sonatype.com>" \
@@ -24,8 +24,11 @@ ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/professional-bundle/n
 
 ENV SONATYPE_WORK=/sonatype-work
 
-RUN yum install -y --disableplugin=subscription-manager hostname java-1.8.0-openjdk \
-  && yum clean all
+RUN yum install -v -y --disableplugin=subscription-manager hostname java-1.8.0-openjdk \
+  && yum-config-manager --add-repo http://mirror.centos.org/centos/7/os/x86_64/ \
+  && rpm --import http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7 \
+  && yum install -v -y createrepo \
+  && yum --disableplugin=subscription-manager clean all
 
 RUN mkdir -p /opt/sonatype/nexus \
   && curl --fail --silent --location --retry 3 \
