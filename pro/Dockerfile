@@ -25,7 +25,7 @@ ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/professional-bundle/n
 ENV SONATYPE_WORK=/sonatype-work
 ENV NEXUS_HOME=/opt/sonatype/nexus
 
-RUN yum install -v -y --disableplugin=subscription-manager hostname java-1.8.0-openjdk \
+RUN yum install -v -y --disableplugin=subscription-manager hostname java-1.8.0-openjdk-headless \
   && yum-config-manager --add-repo http://mirror.centos.org/centos/7/os/x86_64/ \
   && rpm --import http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7 \
   && yum install -v -y createrepo \
