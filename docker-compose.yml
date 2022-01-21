@@ -4,7 +4,7 @@ services:
   nexus:
     image: sonatype/nexus
     volumes:
-      - "nexus-data:/sonatype-work"
+      - "nexus-data:/sonartype-work"
     ports:
       - "8081:8081"
   
