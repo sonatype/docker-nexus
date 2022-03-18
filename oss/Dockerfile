@@ -49,7 +49,7 @@ ENV CONTEXT_PATH /nexus
 ENV MAX_HEAP 768m
 ENV MIN_HEAP 256m
 ENV JAVA_OPTS -server -Djava.net.preferIPv4Stack=true
-ENV LAUNCHER_CONF ./conf/jetty.xml ./conf/jetty-requestlog.xml
+ENV LAUNCHER_CONF ./conf/jetty.xml ./conf/jetty-requestlog.xml ./conf/jetty-http.xml
 
 CMD java \
   -Dnexus-work=${SONATYPE_WORK} -Dnexus-webapp-context-path=${CONTEXT_PATH} \
