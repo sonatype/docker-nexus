@@ -71,7 +71,7 @@ process, which runs as UID 200.
   * `JAVA_OPTS`.  Additional options can be passed to the JVM via this variable.
   Default: `-server -XX:MaxPermSize=192m -Djava.net.preferIPv4Stack=true`.
   * `LAUNCHER_CONF`.  A list of configuration files supplied to the
-  Nexus bootstrap launcher.  Default: `./conf/jetty.xml ./conf/jetty-requestlog.xml`
+  Nexus bootstrap launcher.  Default: `./conf/jetty.xml ./conf/jetty-requestlog.xml ./conf/jetty-http.xml`
 
   These can be user supplied at runtime to control the JVM:
 
