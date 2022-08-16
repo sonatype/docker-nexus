@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM registry.access.redhat.com/ubi7/ubi
+FROM registry.access.redhat.com/ubi7/ubi-minimal
 
 LABEL vendor=Sonatype \
   maintainer="Sonatype <cloud-ops@sonatype.com>" \
@@ -25,11 +25,14 @@ ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/oss/nexus-${NEXUS_VER
 ENV SONATYPE_WORK=/sonatype-work
 ENV NEXUS_HOME=/opt/sonatype/nexus
 
-RUN yum install -v -y --disableplugin=subscription-manager hostname java-1.8.0-openjdk-headless \
-  && yum-config-manager --add-repo http://mirror.centos.org/centos/7/os/x86_64/ \
-  && rpm --import http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7 \
-  && yum install -v -y createrepo \
-  && yum --disableplugin=subscription-manager clean all
+RUN echo "" >>  /etc/yum.repos.d/ubi.repo \
+    && echo "name = CentOS 7" >> /etc/yum.repos.d/ubi.repo \
+    && echo "baseurl = http://mirror.centos.org/centos/7/os/x86_64/" >> /etc/yum.repos.d/ubi.repo \
+    && echo "enabled = 1" >> /etc/yum.repos.d/ubi.repo \
+    && rpm --import http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7
+
+RUN microdnf install -y hostname java-1.8.0-openjdk-headless createrepo \
+    && microdnf clean all
 
 RUN mkdir -p ${NEXUS_HOME} && \
   curl --fail --silent --location --retry 3 ${NEXUS_DOWNLOAD_URL} | \
