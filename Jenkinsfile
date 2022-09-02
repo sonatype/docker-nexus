@@ -35,7 +35,7 @@ node('ubuntu-zion') {
         [ dockerFilePath: "${pwd()}/pro/Dockerfile", imageTag: "${imageName}:pro", imageId: "", flavor: "pro" ]
       ]
 
-      branch = checkoutDetails.GIT_BRANCH == 'origin/master' ? 'master' : checkoutDetails.GIT_BRANCH
+      branch = checkoutDetails.GIT_BRANCH == 'origin/main' ? 'main' : checkoutDetails.GIT_BRANCH
       commitId = checkoutDetails.GIT_COMMIT
 
       OsTools.runSafe(this, 'git config --global user.email sonatype-ci@sonatype.com')
@@ -92,7 +92,7 @@ node('ubuntu-zion') {
         archiveArtifacts artifacts: "${archiveName}-*.tar.gz", onlyIfSuccessful: true
       }
     }
-    if (branch != 'master') {
+    if (branch != 'main') {
       return
     }
     input 'Push image and tags?'
@@ -127,7 +127,7 @@ node('ubuntu-zion') {
   } finally {
     OsTools.runSafe(this, "docker logout")
     OsTools.runSafe(this, "docker system prune -a -f")
-    OsTools.runSafe(this, 'git clean -f && git reset --hard origin/master')
+    OsTools.runSafe(this, 'git clean -f && git reset --hard origin/main')
   }
 }
 
