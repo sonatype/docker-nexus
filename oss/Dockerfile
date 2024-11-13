@@ -26,8 +26,8 @@ ENV SONATYPE_WORK=/sonatype-work
 ENV NEXUS_HOME=/opt/sonatype/nexus
 
 RUN yum install -v -y --disableplugin=subscription-manager hostname java-1.8.0-openjdk-headless \
-  && yum-config-manager --add-repo http://mirror.centos.org/centos/7/os/x86_64/ \
-  && rpm --import http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7 \
+  && yum-config-manager --add-repo https://vault.centos.org/centos/7/os/x86_64/ \
+  && rpm --import https://vault.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7 \
   && yum install -v -y createrepo \
   && yum --disableplugin=subscription-manager clean all
 
