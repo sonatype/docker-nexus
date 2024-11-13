@@ -75,7 +75,7 @@ node('ubuntu-zion') {
         sshagent(credentials: [sonatypeZionCredentialsId()]) {
           sh """git add .
                 git commit -m '${commitMessage}'
-                git push
+                git push origin ${branch}
                 """
         }
       }
@@ -112,7 +112,7 @@ node('ubuntu-zion') {
       sonatypeZionGitConfig()
       sshagent(credentials: [sonatypeZionCredentialsId()]) {
         sh """git tag ${shortVersion}
-              git push
+              git push origin ${shortVersion}
               """
       }
       OsTools.runSafe(this, "git tag -d ${shortVersion}")
