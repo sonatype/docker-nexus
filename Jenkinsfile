@@ -112,7 +112,7 @@ node('ubuntu-zion') {
         sshagent(credentials: [sonatypeZionCredentialsId()]) {
           sh """git tag ${shortVersion}
                 git push \
-                https://${GITHUB_TOKEN}@github.com/${organization}/${gitHubRepository}.git ${shortVersion}
+                https://${GITHUB_TOKEN}@github.com/${organization}/${gitHubRepository}.git ${branch}
                 """
         }
         OsTools.runSafe(this, "git tag -d ${shortVersion}")
