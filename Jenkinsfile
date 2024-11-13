@@ -44,7 +44,7 @@ node('ubuntu-zion') {
       longVersion = readLongVersion()
 
       withGitHubAppToken {
-        gitHub = new GitHub(this, "${organization}/${gitHubRepository}", ${GITHUB_TOKEN})
+        gitHub = new GitHub(this, "${organization}/${gitHubRepository}", "${GITHUB_TOKEN}")
       }
     }
     if (params.nexus_repository_manager_version) {
