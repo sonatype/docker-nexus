@@ -72,9 +72,7 @@ node('ubuntu-zion') {
           def commitMessage = "Update Repository Manager to ${params.nexus_repository_manager_version}."
           sonatypeZionGitConfig()
           sshagent(credentials: [sonatypeZionCredentialsId()]) {
-            sh """git tag ${env.VERSION}
-                  git push origin ${env.VERSION}
-                  git add .
+            sh """git add .
                   git commit -m '${commitMessage}'
                   git push https://${GITHUB_TOKEN}@github.com/${organization}/${gitHubRepository}.git ${shortVersion}
                   """
