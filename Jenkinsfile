@@ -24,105 +24,101 @@ node('ubuntu-zion') {
   GitHub gitHub
 
   try {
-    stage('Preparation') {
-      deleteDir()
-      OsTools.runSafe(this, "docker system prune -a -f")
+    withGitHubAppToken {
+      stage('Preparation') {
+        deleteDir()
+        OsTools.runSafe(this, "docker system prune -a -f")
 
-      def checkoutDetails = checkout scm
+        def checkoutDetails = checkout scm
 
-      dockerImages = [
-        [ dockerFilePath: "${pwd()}/oss/Dockerfile", imageTag: "${imageName}:oss", imageId: "", flavor: "oss" ],
-        [ dockerFilePath: "${pwd()}/pro/Dockerfile", imageTag: "${imageName}:pro", imageId: "", flavor: "pro" ]
-      ]
+        dockerImages = [
+          [ dockerFilePath: "${pwd()}/oss/Dockerfile", imageTag: "${imageName}:oss", imageId: "", flavor: "oss" ],
+          [ dockerFilePath: "${pwd()}/pro/Dockerfile", imageTag: "${imageName}:pro", imageId: "", flavor: "pro" ]
+        ]
 
-      branch = checkoutDetails.GIT_BRANCH == 'origin/main' ? 'main' : checkoutDetails.GIT_BRANCH
-      commitId = checkoutDetails.GIT_COMMIT
+        branch = checkoutDetails.GIT_BRANCH == 'origin/main' ? 'main' : checkoutDetails.GIT_BRANCH
+        commitId = checkoutDetails.GIT_COMMIT
 
-      OsTools.runSafe(this, 'git config --global user.email sonatype-ci@sonatype.com')
-      OsTools.runSafe(this, 'git config --global user.name Sonatype CI')
+        OsTools.runSafe(this, 'git config --global user.email sonatype-ci@sonatype.com')
+        OsTools.runSafe(this, 'git config --global user.name Sonatype CI')
 
-      longVersion = readLongVersion()
+        longVersion = readLongVersion()
 
-      def apiToken
-      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentialsId,
-                        usernameVariable: 'GITHUB_API_USERNAME', passwordVariable: 'GITHUB_API_PASSWORD']]) {
-        apiToken = env.GITHUB_API_PASSWORD
+        gitHub = new GitHub(this, "${organization}/${gitHubRepository}", ${GITHUB_TOKEN})
       }
-      gitHub = new GitHub(this, "${organization}/${gitHubRepository}", apiToken)
-    }
-    if (params.nexus_repository_manager_version) {
-      stage('Update Repository Manager Version') {
-        OsTools.runSafe(this, "git checkout ${branch}")
-        dockerImages.each { updateRepositoryManagerVersion(it.dockerFilePath) }
-        longVersion = params.nexus_repository_manager_version
-      }
-    }
-    stage('Build') {
-      gitHub.statusUpdate commitId, 'pending', 'build', 'Build is running'
-      dockerImages.each { image ->
-        def hash = OsTools.runSafe(this, "docker build --quiet --no-cache --tag ${image.imageTag} -f ${image.dockerFilePath} .")
-        image.imageId = hash.split(':')[1]
-
-        if (currentBuild.result == 'FAILURE') {
-            gitHub.statusUpdate commitId, 'failure', 'build', 'Build failed'
-            return
-        } else {
-            gitHub.statusUpdate commitId, 'success', 'build', 'Build succeeded'
+      if (params.nexus_repository_manager_version) {
+        stage('Update Repository Manager Version') {
+          OsTools.runSafe(this, "git checkout ${branch}")
+          dockerImages.each { updateRepositoryManagerVersion(it.dockerFilePath) }
+          longVersion = params.nexus_repository_manager_version
         }
       }
-    }
-    if (params.nexus_repository_manager_version) {
-      stage('Commit Repository Manager Version Update') {
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'integrations-github-api',
-                        usernameVariable: 'GITHUB_API_USERNAME', passwordVariable: 'GITHUB_API_PASSWORD']]) {
-          def commitMessage = "Update Repository Manager to ${params.nexus_repository_manager_version}."
-          OsTools.runSafe(this, """
-            git add .
-            git commit -m '${commitMessage}'
-            git push https://${env.GITHUB_API_USERNAME}:${env.GITHUB_API_PASSWORD}@github.com/${organization}/${gitHubRepository}.git ${branch}
-          """)
-        }
-      }
-    }
-    stage('Archive') {
-      dir('build/target') {
-        dockerImages.each {
-            OsTools.runSafe(this, "docker save ${it.imageId} | gzip > ${archiveName}-${it.flavor}.tar.gz")
-        }
-        archiveArtifacts artifacts: "${archiveName}-*.tar.gz", onlyIfSuccessful: true
-      }
-    }
-    if (branch != 'main') {
-      return
-    }
-    input 'Push image and tags?'
-    stage('Push image and tags') {
-      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-hub-credentials',
-            usernameVariable: 'DOCKERHUB_API_USERNAME', passwordVariable: 'DOCKERHUB_API_PASSWORD']]) {
+      stage('Build') {
+        gitHub.statusUpdate commitId, 'pending', 'build', 'Build is running'
         dockerImages.each { image ->
-            def tags = getTags(image.flavor, longVersion)
-            tags.each { tag ->
-                OsTools.runSafe(this, "docker tag ${image.imageId} ${organization}/${dockerHubRepository}:${tag}")
-            }
+          def hash = OsTools.runSafe(this, "docker build --quiet --no-cache --tag ${image.imageTag} -f ${image.dockerFilePath} .")
+          image.imageId = hash.split(':')[1]
+
+          if (currentBuild.result == 'FAILURE') {
+              gitHub.statusUpdate commitId, 'failure', 'build', 'Build failed'
+              return
+          } else {
+              gitHub.statusUpdate commitId, 'success', 'build', 'Build succeeded'
+          }
         }
-        OsTools.runSafe(this, """
-            docker login --username ${env.DOCKERHUB_API_USERNAME} --password ${env.DOCKERHUB_API_PASSWORD}
-            """)
-        OsTools.runSafe(this, "docker push --all-tags ${organization}/${dockerHubRepository}")
       }
-    }
-    stage('Push tags') {
-      def shortVersion = getShortVersion(longVersion)
-      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: credentialsId,
-                        usernameVariable: 'GITHUB_API_USERNAME', passwordVariable: 'GITHUB_API_PASSWORD']]) {
-        OsTools.runSafe(this, "git tag ${shortVersion}")
-        OsTools.runSafe(this, """
-          git push \
-          https://${env.GITHUB_API_USERNAME}:${env.GITHUB_API_PASSWORD}@github.com/${organization}/${gitHubRepository}.git \
-            ${shortVersion}
-        """)
+      if (params.nexus_repository_manager_version) {
+        stage('Commit Repository Manager Version Update') {
+          def commitMessage = "Update Repository Manager to ${params.nexus_repository_manager_version}."
+          sonatypeZionGitConfig()
+          sshagent(credentials: [sonatypeZionCredentialsId()]) {
+            sh """git tag ${env.VERSION}
+                  git push origin ${env.VERSION}
+                  git add .
+                  git commit -m '${commitMessage}'
+                  git push https://${GITHUB_TOKEN}@github.com/${organization}/${gitHubRepository}.git ${shortVersion}
+                  """
+          }
+        }
       }
-      OsTools.runSafe(this, "git tag -d ${shortVersion}")
+      stage('Archive') {
+        dir('build/target') {
+          dockerImages.each {
+              OsTools.runSafe(this, "docker save ${it.imageId} | gzip > ${archiveName}-${it.flavor}.tar.gz")
+          }
+          archiveArtifacts artifacts: "${archiveName}-*.tar.gz", onlyIfSuccessful: true
+        }
+      }
+      if (branch != 'main') {
+        return
+      }
+      input 'Push image and tags?'
+      stage('Push image and tags') {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker-hub-credentials',
+              usernameVariable: 'DOCKERHUB_API_USERNAME', passwordVariable: 'DOCKERHUB_API_PASSWORD']]) {
+          dockerImages.each { image ->
+              def tags = getTags(image.flavor, longVersion)
+              tags.each { tag ->
+                  OsTools.runSafe(this, "docker tag ${image.imageId} ${organization}/${dockerHubRepository}:${tag}")
+              }
+          }
+          OsTools.runSafe(this, """
+              docker login --username ${env.DOCKERHUB_API_USERNAME} --password ${env.DOCKERHUB_API_PASSWORD}
+              """)
+          OsTools.runSafe(this, "docker push --all-tags ${organization}/${dockerHubRepository}")
+        }
+      }
+      stage('Push tags') {
+        def shortVersion = getShortVersion(longVersion)
+        sonatypeZionGitConfig()
+        sshagent(credentials: [sonatypeZionCredentialsId()]) {
+          sh """git tag ${shortVersion}
+                git push \
+                https://${GITHUB_TOKEN}@github.com/${organization}/${gitHubRepository}.git ${shortVersion}
+                """
+        }
+        OsTools.runSafe(this, "git tag -d ${shortVersion}")
+      }
     }
   } finally {
     OsTools.runSafe(this, "docker logout")
